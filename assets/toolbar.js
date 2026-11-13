@@ -136,10 +136,27 @@
             var translationSlot = node('slot', '', { name: 'translation' });
             content.appendChild(translationSlot);
             translation.hidden = false;
+            var languageReset = translation.querySelector('#grid-a11y-language-reset');
+            // Use the official selector's original-language option so GTranslate
+            // restores the page and its remembered choice through its own handler.
+            function originalLanguageOption(select) {
+                return Array.prototype.find.call(select.options, function (option) {
+                    var pair = option.value.split('|');
+                    return pair.length === 2 && pair[0] && pair[0] === pair[1];
+                });
+            }
+            if (languageReset) languageReset.addEventListener('click', function () {
+                var select = translation.querySelector('select.gt_selector');
+                var original = select && originalLanguageOption(select);
+                if (!original) return;
+                select.value = original.value;
+                select.dispatchEvent(new Event('change', { bubbles: true }));
+            });
             function readyTranslation() {
                 var select = translation.querySelector('select.gt_selector');
                 if (!select) return;
                 select.id = 'grid-a11y-language';
+                if (languageReset) languageReset.disabled = !originalLanguageOption(select);
                 select.setAttribute('aria-describedby', 'grid-a11y-translation-note');
                 var loading = translation.querySelector('#grid-a11y-translation-status');
                 if (loading.textContent) loading.textContent = '';

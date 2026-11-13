@@ -1,11 +1,12 @@
 name: Publish tested plugin release
 on:
+  create:
   workflow_dispatch:
     inputs:
       version:
         description: Stable plugin version (must match source headers and readme)
         required: true
-        default: '1.11.0'
+        default: '1.11.1'
 permissions:
   contents: write
 concurrency:
@@ -13,12 +14,25 @@ concurrency:
   cancel-in-progress: false
 jobs:
   release:
+    if: github.event_name == 'workflow_dispatch' || (github.event.ref_type == 'branch' && startsWith(github.event.ref, 'release/'))
     runs-on: ubuntu-latest
     env:
-      RELEASE_VERSION: ${{ inputs.version }}
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
+      - name: Resolve explicitly requested release version
+        env:
+          MANUAL_VERSION: ${{ inputs.version }}
+          RELEASE_REF: ${{ github.event.ref }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
+            version="$MANUAL_VERSION"
+          else
+            version="${RELEASE_REF#release/}"
+          fi
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then exit 1; fi
+          echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
       - name: Validate PHP syntax and update policy
         run: |
           find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l

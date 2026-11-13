@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Accessibility Toolbar
  * Description: Independent, local visitor reading preferences for GRID-Arendal sites. Does not certify accessibility or WCAG conformance.
- * Version: 1.11.0
+ * Version: 1.11.1
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '1.11.0';
+    const VERSION = '1.11.1';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
@@ -258,7 +258,8 @@ final class GRID_Accessibility_Toolbar {
             // Keep the official selector in light DOM so GTranslate can find it;
             // the frontend slots it into the isolated accessibility panel.
             echo '<div id="grid-a11y-translation" slot="translation" class="notranslate" translate="no" data-ga-a11y-ignore hidden>';
-            echo '<label for="grid-a11y-language">' . esc_html__( 'Website language', 'grid-accessibility-toolbar' ) . '</label>';
+            echo '<div class="grid-a11y-language-heading"><label for="grid-a11y-language">' . esc_html__( 'Website language', 'grid-accessibility-toolbar' ) . '</label>';
+            echo '<button type="button" id="grid-a11y-language-reset" aria-label="' . esc_attr__( 'Restore original website language', 'grid-accessibility-toolbar' ) . '" disabled>' . esc_html__( 'Reset', 'grid-accessibility-toolbar' ) . '</button></div>';
             echo do_shortcode( '[gtranslate widget_look="dropdown"]' ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- trusted registered plugin shortcode.
             echo '<p id="grid-a11y-translation-status" role="status">' . esc_html__( 'Loading language selector…', 'grid-accessibility-toolbar' ) . '</p>';
             echo '<p id="grid-a11y-translation-note" class="grid-a11y-translation-note">' . esc_html__( 'Automatic page translation by GTranslate. Toolbar labels follow the site interface language.', 'grid-accessibility-toolbar' ) . '</p></div>';
@@ -321,6 +322,10 @@ final class GRID_Accessibility_Toolbar {
         add_submenu_page( 'grid-arendal', __( 'Accessibility Widget', 'grid-accessibility-toolbar' ), __( 'Accessibility Widget', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-a11y', array( __CLASS__, 'admin_page' ) );
     }
 
+    public static function admin_assets() {
+        wp_enqueue_style( 'grid-a11y-admin', plugins_url( 'assets/admin.css', __FILE__ ), array(), self::VERSION );
+    }
+
     public static function admin_overview() {
         if ( ! current_user_can( 'manage_options' ) ) return;
         echo '<div class="wrap"><h1>' . esc_html__( 'GRID-Arendal', 'grid-accessibility-toolbar' ) . '</h1><h2>' . esc_html__( 'Accessibility Widget', 'grid-accessibility-toolbar' ) . '</h2><p>' . esc_html__( 'Help visitors choose how they read and navigate your website. Configure the widget controls, profiles, appearance and translation integration.', 'grid-accessibility-toolbar' ) . '</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-a11y' ) ) . '">' . esc_html__( 'Manage Accessibility Widget', 'grid-accessibility-toolbar' ) . '</a></p></div>';
@@ -374,6 +379,7 @@ add_action( 'init', array( 'GRID_Accessibility_Toolbar', 'redirect_legacy_settin
 add_action( 'admin_notices', array( 'GRID_Accessibility_Toolbar', 'dependency_notice' ) );
 add_action( 'network_admin_notices', array( 'GRID_Accessibility_Toolbar', 'dependency_notice' ) );
 add_action( 'admin_menu', array( 'GRID_Accessibility_Toolbar', 'admin_menu' ) );
+add_action( 'admin_enqueue_scripts', array( 'GRID_Accessibility_Toolbar', 'admin_assets' ) );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( 'GRID_Accessibility_Toolbar', 'action_links' ) );
 
 require_once __DIR__ . '/includes/class-grid-plugin-updates.php';
