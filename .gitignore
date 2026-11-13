@@ -1,0 +1,9 @@
+dist/
+.env
+.env.*
+wp-config.php
+*.key
+*.pem
+test-results/
+__pycache__/
+.DS_Store

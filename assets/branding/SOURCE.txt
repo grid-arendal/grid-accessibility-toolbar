@@ -1,0 +1,5 @@
+GRID-Arendal brand assets supplied by the user.
+Active header icon: unchanged GA logo Square - Lavender.svg, bundled as grid-flower.svg.
+The full logo is retained as an unused asset; the visible header uses only the compact flower.
+Unmodified Geologica Regular/SemiBold TTF fonts: assets/fonts/Geologica-OFL.txt (SIL OFL 1.1).
+Logo/icon remain official GRID-Arendal brand/trademark assets; no general trademark license is granted.

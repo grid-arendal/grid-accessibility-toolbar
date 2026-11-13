@@ -1,0 +1,18 @@
+The GRID Accessibility Toolbar plugin code is GPL-2.0-or-later.
+
+The bundled, unmodified OpenDyslexic font binaries in assets/fonts/ remain
+licensed under the SIL Open Font License 1.1, rather than the plugin code's
+GPL license. Their complete copyright notice and license are included in
+assets/fonts/OFL.txt. See assets/fonts/SOURCE.txt for source revision and
+checksums. OpenDyslexic is by Abbie Gonzalez: https://opendyslexic.org/
+
+These fonts are served locally by the installed plugin, without a third-party
+font service. The optional font choice is a personal reading preference;
+no therapeutic benefit or accessibility conformance is guaranteed.
+
+Geologica Regular and SemiBold fonts are supplied unchanged from the user-provided GRID-Arendal brand package, under SIL OFL 1.1. See assets/fonts/Geologica-OFL.txt. The official GRID-Arendal logo is a user-supplied brand asset, not a grant of trademark rights. See assets/branding/SOURCE.txt.
+
+Plugin Update Checker 6.0 — Janis (Yahnis) Elsts, MIT license.
+Unmodified runtime source pinned to upstream tag v6.0.
+https://github.com/YahnisElsts/plugin-update-checker/tree/v6.0
+See vendor/plugin-update-checker/license.txt and SOURCE.txt.

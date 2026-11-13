@@ -1,0 +1,3 @@
+Plugin Update Checker 6.0 by Janis (Yahnis) Elsts. Unmodified runtime files from official tag v6.0.
+https://github.com/YahnisElsts/plugin-update-checker/tree/v6.0
+MIT license: license.txt
