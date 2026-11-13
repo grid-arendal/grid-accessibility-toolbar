@@ -1,0 +1,16 @@
+{
+  "name": "GRID Accessibility Toolbar",
+  "slug": "grid-accessibility-toolbar",
+  "version": "1.11.0",
+  "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
+  "author": "GRID-Arendal",
+  "author_homepage": "https://www.grida.no/",
+  "requires": "6.4",
+  "requires_php": "7.4",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v1.11.0/grid-accessibility-toolbar-1.11.0.zip",
+  "sha256": "230e3f69ed8adc0b223b931a67789bafd19fca233cda0c70c7a1525d55445307",
+  "sections": {
+    "description": "<p>Independent GRID-Arendal visitor reading preferences. No automated WCAG compliance claim.</p>",
+    "changelog": "<p>Public release updates without per-website GitHub credentials.<br><br>Includes a public release feed, normal WordPress update notices and a GRID-Arendal \u2192 Plugin updates status page. The release workflow advertises an update only after its stable installable ZIP has been uploaded and verified. Drafts, development versions, branch/source archives and mismatched package URLs are excluded.<br><br>Install this ZIP once on each website. Subsequent releases can be installed through WordPress; automatic installation remains an administrator choice. No access token or website registration is required.<br></p>"
+  }
+}
