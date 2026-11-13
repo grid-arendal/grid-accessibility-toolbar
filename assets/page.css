@@ -74,7 +74,8 @@ body.ga-a11y-focus :focus-visible:not(:where(#wpadminbar *, [data-ga-a11y-ignore
 
 #grid-a11y-translation .grid-a11y-language-heading { display: flex !important; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 12px; margin-bottom: 6px; }
 #grid-a11y-translation .grid-a11y-language-heading label { margin: 0 !important; }
-#grid-a11y-language-reset { display: inline-flex !important; align-items: center; justify-content: center; min-height: 44px !important; min-width: 44px; padding: 8px 12px !important; border: 1px solid #955ba3 !important; border-radius: 8px !important; background: #fff !important; color: #470b56 !important; font: 600 13px/1.4 'GRID Geologica', Arial, Helvetica, sans-serif !important; text-transform: none !important; cursor: pointer; }
-#grid-a11y-language-reset:hover { background: #f6eef8 !important; }
+#grid-a11y-language-reset { display: inline-flex !important; align-items: center; justify-content: center; min-height: 28px !important; min-width: 44px; padding: 0 4px !important; border: 0 !important; border-radius: 3px !important; background: transparent !important; box-shadow: none !important; color: #672377 !important; font: 400 12px/1.4 'GRID Geologica', Arial, Helvetica, sans-serif !important; text-transform: none !important; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+#grid-a11y-language-reset:hover { background: transparent !important; color: #470b56 !important; }
+@media (any-pointer: coarse) { #grid-a11y-language-reset { min-height: 44px !important; } }
 #grid-a11y-language-reset:focus-visible { outline: 3px solid #111 !important; outline-offset: 3px !important; }
 #grid-a11y-language-reset:disabled { opacity: .6; cursor: default; }

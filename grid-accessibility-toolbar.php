@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Accessibility Toolbar
  * Description: Independent, local visitor reading preferences for GRID-Arendal sites. Does not certify accessibility or WCAG conformance.
- * Version: 1.11.1
+ * Version: 1.11.2
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '1.11.1';
+    const VERSION = '1.11.2';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
