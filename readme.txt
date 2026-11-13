@@ -3,7 +3,7 @@ Contributors: grid-arendal
 Tags: accessibility, reading, toolbar
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 1.10.0
+Stable tag: 1.11.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,20 +24,20 @@ This is original code, independent of UserWay. It does not reproduce UserWay ser
 == Installation ==
 
 1. In WordPress, choose Plugins > Add New Plugin > Upload Plugin.
-2. Upload grid-accessibility-toolbar-1.10.0.zip and click Install Now.
+2. Upload grid-accessibility-toolbar-1.11.0.zip and click Install Now.
 3. Activate GRID Accessibility Toolbar.
 4. Open GRID-Arendal > Accessibility Widget and save your preferred options.
 5. Clear site/CDN caches and test a public page while signed out.
 
 No signup or API key is required. Repeat on each site. Multisite network activation is supported with per-site settings and lazy defaults for new sites; there is no shared network settings screen.
 
-== Private updates ==
+== Release updates ==
 
-An optional server-held GRID_A11Y_GITHUB_TOKEN credential enables updates from the private grid-arendal/grid-accessibility-toolbar repository. It is never included in the plugin ZIP or stored by this plugin in its settings. Only published stable x.y.z releases with an installable plugin ZIP are considered. Drafts, prereleases, tags without releases and branches are excluded. WordPress checks periodically; automatic installation is an administrator choice. Without a credential the widget still works, with no GitHub requests from this integration. See the separately supplied PRIVATE-UPDATES.md.
+Updates use the public grid-arendal/grid-accessibility-toolbar GitHub release channel. No website account, access token or registration is needed. A release feed is published only after the tested stable ZIP is available. Branch/source archives and mismatched release URLs are rejected. Check under GRID-Arendal > Plugin updates. WordPress checks periodically; automatic installation remains opt-in. Set GRID_A11Y_ENABLE_UPDATES to false on the server to disable checks.
 
 == Privacy ==
 
-With remembering enabled, the plugin stores only preference values in localStorage under a site-specific grid-a11y-v1-* key. The core reading controls use no cookies, telemetry, third-party font services or external runtime requests. When GTranslate is installed and its selector is enabled, GTranslate loads its external widget and translation engine and sends page text to its translation service when used. GTranslate can remember a visitor-selected language separately from these reading preferences. Reset preferences removes the key. Disabling remembering removes the key on the next eligible page visit. Storage restrictions are handled gracefully. Configured private update checks contact GitHub server-to-server to retrieve release metadata, source headers/readme and update packages. Credentials are sent as request headers to the repository API, not in browser links; cross-host download redirects remove those headers. No visitor page content or reading preferences are sent by the updater. Other site plugins may collect data independently.
+With remembering enabled, the plugin stores only preference values in localStorage under a site-specific grid-a11y-v1-* key. The core reading controls use no cookies, telemetry, third-party font services or external runtime requests. When GTranslate is installed and its selector is enabled, GTranslate loads its external widget and translation engine and sends page text to its translation service when used. GTranslate can remember a visitor-selected language separately from these reading preferences. Reset preferences removes the key. Disabling remembering removes the key on the next eligible page visit. Storage restrictions are handled gracefully. Release checks contact GitHub server-to-server for public update metadata and packages. The updater sends no visitor page content or reading preferences and uses no GitHub credential. Other site plugins may collect data independently.
 
 == Limitations ==
 
@@ -60,6 +60,11 @@ Eight transparent presets: Motor Impaired, Blind, Color Blind, Dyslexia, Low vis
 OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed under SIL OFL 1.1; see assets/fonts/OFL.txt and THIRD-PARTY-NOTICES.txt. OpenDyslexic is fetched from your own site only when selected. The interface uses locally hosted Geologica Regular and SemiBold, also under SIL OFL 1.1; see assets/fonts/Geologica-OFL.txt.
 
 == Changelog ==
+
+= 1.11.0 =
+* Public release updates work without any per-website GitHub credential.
+* Release workflow publishes update metadata only after the stable ZIP exists.
+* Native WordPress update notices and optional automatic installation.
 
 = 1.10.0 =
 * Optional private GitHub release updates through the native WordPress update interface.

@@ -5,11 +5,11 @@ on:
       version:
         description: Stable plugin version (must match source headers and readme)
         required: true
-        default: '1.10.0'
+        default: '1.11.0'
 permissions:
   contents: write
 concurrency:
-  group: grid-release-${{ inputs.version }}
+  group: grid-stable-release
   cancel-in-progress: false
 jobs:
   release:
@@ -18,17 +18,19 @@ jobs:
       RELEASE_VERSION: ${{ inputs.version }}
       GH_TOKEN: ${{ github.token }}
     steps:
-      - uses: actions/checkout@v4
-      - name: Validate PHP syntax and updater policy
+      - uses: actions/checkout@v6
+      - name: Validate PHP syntax and update policy
         run: |
           find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
           php tests/php-unit.php
-          php tests/updater/private-updates.php
+          php tests/updater/public-updates.php
       - name: Build and validate installable ZIP
         run: python3 tools/build-release.py --source . --output dist --version "$RELEASE_VERSION"
-      - name: Publish stable private release
+      - name: Publish stable release
         run: |
           gh release create "v${RELEASE_VERSION}" \
             "dist/grid-accessibility-toolbar-${RELEASE_VERSION}.zip" dist/SHA256SUMS.txt \
             --target "$GITHUB_SHA" --title "GRID Accessibility Toolbar ${RELEASE_VERSION}" \
             --notes-file RELEASE-NOTES.md
+      - name: Publish update feed after successful release
+        run: python3 tools/publish-metadata.py

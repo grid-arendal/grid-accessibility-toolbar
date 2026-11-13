@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Accessibility Toolbar
  * Description: Independent, local visitor reading preferences for GRID-Arendal sites. Does not certify accessibility or WCAG conformance.
- * Version: 1.10.0
+ * Version: 1.11.0
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '1.10.0';
+    const VERSION = '1.11.0';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
@@ -376,5 +376,5 @@ add_action( 'network_admin_notices', array( 'GRID_Accessibility_Toolbar', 'depen
 add_action( 'admin_menu', array( 'GRID_Accessibility_Toolbar', 'admin_menu' ) );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( 'GRID_Accessibility_Toolbar', 'action_links' ) );
 
-require_once __DIR__ . '/includes/class-grid-private-updates.php';
-GRID_A11Y_Private_Updates::register( __FILE__ );
+require_once __DIR__ . '/includes/class-grid-plugin-updates.php';
+GRID_A11Y_Plugin_Updates::register( __FILE__ );

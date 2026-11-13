@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Build an installable ZIP using runtime files only. Requires Python 3.8+."""
-import argparse, hashlib, re, zipfile
+import argparse, hashlib, re, zipfile, json, html
 from pathlib import Path
 parser=argparse.ArgumentParser()
 parser.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1])
@@ -34,3 +34,9 @@ with zipfile.ZipFile(target) as z:
 digest=hashlib.sha256(target.read_bytes()).hexdigest()
 (a.output/'SHA256SUMS.txt').write_text(digest+'  '+target.name+'\n')
 print(target.name, 'files='+str(len(files)), 'sha256='+digest)
+
+minimum_wp=re.search(r'\* Requires at least:\s*([^\n]+)',main).group(1).strip()
+minimum_php=re.search(r'\* Requires PHP:\s*([^\n]+)',main).group(1).strip()
+notes=(root/'RELEASE-NOTES.md').read_text() if (root/'RELEASE-NOTES.md').exists() else 'Published stable plugin release.'
+metadata={'name':'GRID Accessibility Toolbar','slug':'grid-accessibility-toolbar','version':version,'homepage':'https://github.com/grid-arendal/grid-accessibility-toolbar','author':'GRID-Arendal','author_homepage':'https://www.grida.no/','requires':minimum_wp,'requires_php':minimum_php,'download_url':'https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v'+version+'/'+target.name,'sha256':digest,'sections':{'description':'<p>Independent GRID-Arendal visitor reading preferences. No automated WCAG compliance claim.</p>','changelog':'<p>'+html.escape(notes).replace('\n','<br>')+'</p>'}}
+(a.output/'updates.json').write_text(json.dumps(metadata,indent=2)+'\n')

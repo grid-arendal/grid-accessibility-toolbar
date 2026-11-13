@@ -1,10 +1,10 @@
-# GRID Accessibility Toolbar 1.10.0
+# GRID Accessibility Toolbar 1.11.0
 
 ## Installation or update
 
 1. Sign in to WordPress as an administrator.
 2. Open **Plugins → Add New Plugin → Upload Plugin**.
-3. Upload **grid-accessibility-toolbar-1.10.0.zip** without extracting it.
+3. Upload **grid-accessibility-toolbar-1.11.0.zip** without extracting it.
 4. Choose **Install Now**, then **Activate Plugin**. For an update, choose **Replace current with uploaded**.
 5. Open **GRID-Arendal → Accessibility Widget**. The toolbar is enabled sitewide by default. Choose controls, launcher position/color, preference storage and an optional accessibility statement URL, then save.
 6. Clear site, hosting and CDN caches, then check a public page while signed out.
@@ -71,11 +71,11 @@ The original category and installation references were UserWay's widget, WordPre
 
 [How to use the Accessibility Widget](https://marco2mrv.eu/?page_id=28) explains every control and profile, keyboard use, translation, privacy and reset. It links to open research and clearly distinguished W3C guidance. The guide is separate WordPress page content, not automatically created on each plugin installation. Reusable source: guide/widget-guide.html.
 
-## Touch-only devices (1.10.0)
+## Touch-only devices (1.11.0)
 
 Cursor, reading mask, reading guide and hover tooltips are omitted on touch-only phones/tablets. Other controls remain available. Profiles and restored browser preferences cannot activate hidden controls. Detection uses coarse/fine pointer and hover capabilities, not viewport width, so small desktop windows and mouse-equipped hybrids keep their pointer controls. Detection runs on page load; reload after connecting a mouse/trackpad if needed.
 
-## Administrator menu (1.10.0)
+## Administrator menu (1.11.0)
 
 Open the dedicated **GRID-Arendal → Accessibility Widget** menu, identified by the official lavender flower. It is no longer a Settings submenu. Existing settings-page bookmarks redirect automatically. The normal administrator permission requirement is unchanged. GTranslate has its own separate settings page; use only one translation engine. The test site’s redundant Google Language Translator is deactivated, with its saved settings retained.
 
@@ -83,6 +83,7 @@ Open the dedicated **GRID-Arendal → Accessibility Widget** menu, identified by
 
 The test-site guide now uses guide/widget-guide-designed.html, generated from the original text by guide/build-guide.py and guide/screenshots/media.json. It includes 22 actual screenshots with alternative text and responsive feature cards. On touch-only screens the introductory desktop overview is hidden; screenshots beside individual explanations remain available and pointer-specific examples are labelled. Screenshot media belongs to the test site and is separate from the reusable plugin ZIP.
 
-## Private release updates (1.10.0)
 
-Open **GRID-Arendal → Plugin updates**. The initial updater-enabled ZIP must be installed once per site. A separate server-held, read-only credential is required for the private repository. See PRIVATE-UPDATES.md. No GitHub credential is contained in the ZIP, and automatic installation is not forced.
+## Public release updates (1.11.0)
+
+No per-site credentials are needed. Install this ZIP once, then use the normal WordPress Plugins/Updates screens. Open GRID-Arendal → Plugin updates for status. Automatic installation is optional. See UPDATES.md for the maintainer publishing workflow.

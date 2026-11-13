@@ -1,14 +1,14 @@
 # GRID Accessibility Toolbar
 
-Private GRID-Arendal WordPress accessibility widget source and stable release distribution.
+GRID-Arendal WordPress accessibility widget with public, credential-free release updates.
 
-Visitor-controlled reading preferences, compact GRID branding, GTranslate integration and a dedicated GRID-Arendal admin menu. This is an independent implementation; it does not certify WCAG compliance or supply a screen reader.
+Install the **grid-accessibility-toolbar-x.y.z.zip** asset from [Releases](https://github.com/grid-arendal/grid-accessibility-toolbar/releases). Do not upload GitHub's automatic source archive.
 
-Install a release ZIP through WordPress. Do not upload GitHub's automatic source archive. Configure private updates separately on each server; no credential is included in this repository or its ZIPs.
+Once this updater-enabled ZIP is installed, each website can receive normal WordPress update notices without a GitHub account or token. Automatic installation remains an administrator choice. [How updates work](docs/UPDATES.md).
 
 - [Installation](docs/INSTALLATION.md)
-- [Private updates and release workflow](docs/PRIVATE-UPDATES.md)
+- [Update publishing](docs/UPDATES.md)
 - [Code license](LICENSE.txt)
-- [Bundled components and fonts](THIRD-PARTY-NOTICES.txt)
+- [Fonts and bundled components](THIRD-PARTY-NOTICES.txt)
 
-Publish updates through **Actions → Publish tested plugin release → Run workflow** after testing a source change. Release versions must match the plugin headers, VERSION constant and readme Stable tag.
+Visitor-controlled reading preferences, compact GRID branding, GTranslate integration and a dedicated GRID-Arendal admin menu. The widget does not certify WCAG compliance or supply a screen reader. Source, release ZIPs and documentation contain no website passwords or visitor data.
