@@ -1,16 +1,16 @@
 {
   "name": "GRID Accessibility Toolbar",
   "slug": "grid-accessibility-toolbar",
-  "version": "1.11.1",
+  "version": "1.11.2",
   "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
   "author": "GRID-Arendal",
   "author_homepage": "https://www.grida.no/",
   "requires": "6.4",
   "requires_php": "7.4",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v1.11.1/grid-accessibility-toolbar-1.11.1.zip",
-  "sha256": "968457bbd17c8afbe0f131839816472bf2e66f01968b0460f5f3e78ee88bcfa0",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v1.11.2/grid-accessibility-toolbar-1.11.2.zip",
+  "sha256": "a56cc3cdfc405f11c13103d7679467aaecd4f9ac39b39e5f888144095ada7743",
   "sections": {
     "description": "<p>Independent GRID-Arendal visitor reading preferences. No automated WCAG compliance claim.</p>",
-    "changelog": "<p>Constrains the GRID-Arendal administration-menu flower to the standard 20 \u00d7 20 pixel size, including folded menus.<br><br>Includes credential-free public release updates introduced in 1.11.0. Websites do not need GitHub accounts or access tokens.<br><br>Adds a Reset button beside Website language that restores the original language through the official GTranslate selector. The button stays disabled if translation is unavailable.<br></p>"
+    "changelog": "<p>Makes the language Reset a discreet, small underlined text control without a bordered button. Retains visible keyboard focus and 44px touch targets. Desktop controls use a more compact 28px height.<br></p>"
   }
 }
