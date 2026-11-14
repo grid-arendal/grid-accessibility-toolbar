@@ -6,7 +6,7 @@ on:
       version:
         description: Stable plugin version (must match source headers and readme)
         required: true
-        default: '2.0.0'
+        default: '2.0.1'
 permissions:
   contents: write
 concurrency:

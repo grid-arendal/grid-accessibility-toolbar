@@ -39,6 +39,7 @@ final class GRID_Arendal_Workspace {
         if ( self::page() && is_user_logged_in() && is_singular() && get_queried_object_id() !== self::page() && self::can_edit( get_queried_object_id() ) ) self::private_headers();
         if ( ! self::page() || ! is_page( self::page() ) ) return;
         self::private_headers();
+        add_filter( 'body_class', function( $classes ) { $classes[] = 'grid-workspace-screen'; return $classes; } );
         wp_enqueue_style( 'grid-workspace', plugins_url( '../../assets/workspace.css', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION );
         if ( is_user_logged_in() ) { acf_enqueue_scripts(); wp_enqueue_media(); }
         wp_enqueue_script( 'grid-workspace', plugins_url( '../../assets/workspace.js', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION, true );

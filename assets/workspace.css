@@ -3,3 +3,5 @@
 .grid-workspace select{color:#33103c;background:#fff;min-height:44px}.grid-workspace .wp-editor-wrap{max-width:100%;margin-top:6px}.grid-workspace .mce-toolbar button{background:transparent;color:#33103c;border-color:transparent}.grid-workspace .acf-field .description{color:#672377}.grid-workspace input::placeholder,.grid-workspace textarea::placeholder{color:#672377;opacity:1}
 
 .grid-format-toolbar{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.grid-format-toolbar button{background:#fff;color:#470b56;border:1px solid #955ba3;padding:8px 12px}.grid-format-toolbar button:hover{background:#f8f0fa}
+
+@media(max-width:600px){body.grid-workspace-screen #grid-a11y-root{--ga-bottom:132px!important}}
