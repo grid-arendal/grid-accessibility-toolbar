@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID-Arendal
  * Description: Configurable GRID-Arendal tools: accessibility, ACF section names, front-end editing, review, resource imports, private files, maps and LMS connections.
- * Version: 2.0.2
+ * Version: 2.0.3
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '2.0.2';
+    const VERSION = '2.0.3';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
