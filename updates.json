@@ -1,16 +1,16 @@
 {
   "name": "GRID-Arendal",
   "slug": "grid-accessibility-toolbar",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
   "author": "GRID-Arendal",
   "author_homepage": "https://www.grida.no/",
   "requires": "6.4",
   "requires_php": "7.4",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v2.0.3/grid-accessibility-toolbar-2.0.3.zip",
-  "sha256": "1924fc8bb33dc864c1e20f8441c4a9ec38afc57daf39f1df6ca5a0f694507f6f",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v2.0.4/grid-accessibility-toolbar-2.0.4.zip",
+  "sha256": "8d2525da727b6b07adafcd6c7bfd1981edc95a5ab6b2a4a594d9c430820e4d53",
   "sections": {
     "description": "<p>GRID-Arendal accessibility and optional editorial tools. Configure modules per website; no automatic legacy-content migration or WCAG compliance claim.</p>",
-    "changelog": "<p>Includes automatic editable ACF starter groups, the GRID-Arendal Field groups interface and protected workspace navigation from 2.0.2. Contains hidden table accessibility labels within the workspace scroll region to prevent page-wide horizontal scrolling on phones. Existing field customisations and native editorial permissions are preserved.<br></p>"
+    "changelog": "<p>Automatically adds an accessible account icon to a main WordPress menu when the front-end workspace is enabled. Signed-out visitors get a login link returning to the workspace; authorised editors get direct access; other signed-in accounts see no editor icon. Existing workspace links are reused, with a menu selector and opt-out. First enable creates a private workspace page and Page/Article sections if not configured. Existing setups, field customisations and native permissions are preserved.<br></p>"
   }
 }
