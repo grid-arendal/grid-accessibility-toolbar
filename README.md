@@ -4,6 +4,8 @@ A reusable WordPress plugin combining visitor accessibility controls and configu
 
 Accessibility and empty section-label overrides default on. Front-end editing, review, CSV imports, notifications, private files, coordinate editing and LearnPress connections are optional. Existing data keys, URL slugs, user permissions and accessibility settings are preserved. Other plugins and project-specific workflows are not automatically migrated or disabled.
 
+When ACF is available, standard database-backed Page, Article, Resource and Team field groups are created for installed content types. Edit their fields through GRID-Arendal → Field groups; existing customisation and deliberate deletions are preserved. Workspace menu links follow native page and editorial permissions.
+
 See [MODULES.md](MODULES.md) for module setup, dependencies and migration boundaries. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins. No automated WCAG compliance claim is made.
 
 ## Updates and releases

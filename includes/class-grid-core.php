@@ -19,7 +19,7 @@ final class GRID_Arendal_Core {
     }
     public static function settings() {
         $s = get_option( self::OPTION, array() );
-        return array_merge( array( 'modules' => array( 'accessibility', 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
+        return array_merge( array( 'modules' => array( 'accessibility', 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'excluded_pages' => array(), 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
     }
     public static function enabled( $key ) { return in_array( $key, (array) self::settings()['modules'], true ); }
     public static function ready( $key, $seen = array() ) {
@@ -39,6 +39,8 @@ final class GRID_Arendal_Core {
         add_filter( 'grid_a11y_should_display', function( $show ) { return $show && GRID_Arendal_Core::enabled( 'accessibility' ); } );
         require_once __DIR__ . '/modules/class-grid-labels.php';
         GRID_Arendal_Labels::boot();
+        require_once __DIR__ . '/class-grid-fields.php';
+        GRID_Arendal_Fields::boot();
         add_action( 'plugins_loaded', array( __CLASS__, 'modules' ), 30 );
     }
     public static function modules() {
@@ -68,6 +70,11 @@ final class GRID_Arendal_Core {
         $out['modules'] = array_values( array_intersect( array_keys( self::catalog() ), $mods ) );
         $out['workspace_page'] = isset( $input['workspace_page'] ) && is_scalar( $input['workspace_page'] ) ? absint( $input['workspace_page'] ) : 0;
         if ( $out['workspace_page'] && 'page' !== get_post_type( $out['workspace_page'] ) ) $out['workspace_page'] = 0;
+        $out['excluded_pages'] = array();
+        $excluded = $input['excluded_pages'] ?? array();
+        if ( is_string( $excluded ) ) $excluded = preg_split( '/[\s,]+/', $excluded );
+        foreach ( is_array( $excluded ) ? $excluded : array() as $id ) if ( is_scalar( $id ) && ctype_digit( (string) $id ) && 'page' === get_post_type( (int) $id ) ) $out['excluded_pages'][] = (int) $id;
+        $out['excluded_pages'] = array_values( array_unique( $out['excluded_pages'] ) );
         $out['sections'] = array(); $types = self::permitted_types();
         foreach ( (array) ( $input['sections'] ?? array() ) as $type => $s ) {
             if ( ! isset( $types[$type] ) || ! is_array( $s ) || empty( $s['enabled'] ) ) continue;
@@ -108,7 +115,7 @@ final class GRID_Arendal_Core {
         foreach ( self::catalog() as $key => $m ) {
             echo '<tr><td><label><input type="checkbox" name="' . esc_attr( self::OPTION ) . '[modules][]" value="' . esc_attr( $key ) . '" ' . checked( self::enabled( $key ), true, false ) . '> <strong>' . esc_html( $m[0] ) . '</strong></label></td><td>' . esc_html( $m[1] ) . '</td><td>' . esc_html( ! self::enabled( $key ) ? 'Off' : ( self::ready( $key ) ? 'Available' : 'Waiting for required module/plugin' ) ) . '</td></tr>';
         }
-        echo '</tbody></table><h2>Front-end workspace</h2><p>Place <code>[grid_workspace]</code> on a normal WordPress page, then select that page below. It is private to signed-in users with existing per-content editing permissions. No roles or capabilities are granted by this plugin. Course, order and builder editors are excluded.</p><label>Workspace page ID <input type="number" min="0" name="' . esc_attr( self::OPTION ) . '[workspace_page]" value="' . esc_attr( $s['workspace_page'] ) . '"></label><h3>Content sections</h3><p>Choose content types and the ACF groups their forms may edit. Only selected field groups are accepted on submission. Content keys, relationships, commerce fields and builder layouts outside the form are retained.</p>';
+        echo '</tbody></table><h2>Front-end workspace</h2><p>Place <code>[grid_workspace]</code> on a normal WordPress page, then select that page below. It is private to signed-in users with existing per-content editing permissions. No roles or capabilities are granted by this plugin. Course, order and builder editors are excluded.</p><label>Workspace page ID <input type="number" min="0" name="' . esc_attr( self::OPTION ) . '[workspace_page]" value="' . esc_attr( $s['workspace_page'] ) . '"></label><p><label>Excluded page IDs (comma-separated) <input class="regular-text" name="' . esc_attr( self::OPTION ) . '[excluded_pages]" value="' . esc_attr( implode( ', ', $s['excluded_pages'] ) ) . '"></label></p><p>Exclude system or special-purpose pages from this editor. The workspace page is always protected. A menu item linking to the workspace is automatically shown only to signed-in users who can read that page and edit a configured section.</p><h3>Content sections</h3><p>Choose content types and the ACF groups their forms may edit. Only selected field groups are accepted on submission. Content keys, relationships, commerce fields and builder layouts outside the form are retained.</p>';
         foreach ( self::permitted_types() as $type => $obj ) {
             $v = $s['sections'][$type] ?? array(); $name = self::OPTION . '[sections][' . $type . ']';
             echo '<details class="grid-admin-section"><summary><strong>' . esc_html( $obj->label ) . '</strong> <code>' . esc_html( $type ) . '</code></summary><p><label><input type="checkbox" name="' . esc_attr( $name ) . '[enabled]" value="1" ' . checked( isset( $s['sections'][$type] ), true, false ) . '> Include in workspace</label></p><p><label>Workspace name <input name="' . esc_attr( $name ) . '[label]" value="' . esc_attr( $v['label'] ?? '' ) . '" placeholder="' . esc_attr( $obj->label ) . '"></label></p><fieldset><legend>Editable ACF groups</legend>';

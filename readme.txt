@@ -3,7 +3,7 @@ Contributors: grid-arendal
 Tags: accessibility, reading, toolbar
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 2.0.1
+Stable tag: 2.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ This is original code, independent of UserWay. It does not reproduce UserWay ser
 == Installation ==
 
 1. In WordPress, choose Plugins > Add New Plugin > Upload Plugin.
-2. Upload grid-accessibility-toolbar-2.0.1.zip and click Install Now.
+2. Upload grid-accessibility-toolbar-2.0.2.zip and click Install Now.
 3. Activate GRID Accessibility Toolbar.
 4. Open GRID-Arendal > Accessibility Widget and save your preferred options.
 5. Clear site/CDN caches and test a public page while signed out.
@@ -60,6 +60,12 @@ Eight transparent presets: Motor Impaired, Blind, Color Blind, Dyslexia, Low vis
 OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed under SIL OFL 1.1; see assets/fonts/OFL.txt and THIRD-PARTY-NOTICES.txt. OpenDyslexic is fetched from your own site only when selected. The interface uses locally hosted Geologica Regular and SemiBold, also under SIL OFL 1.1; see assets/fonts/Geologica-OFL.txt.
 
 == Changelog ==
+
+= 2.0.2 =
+* Automatically create editable, database-backed starter ACF groups without overwriting owner changes.
+* Add Field groups to the GRID-Arendal menu.
+* Restrict workspace menu links to authorised signed-in editors, including child links.
+* Support excluded system pages and protect the workspace from editing itself.
 
 = 2.0.1 =
 * Keep the accessibility launcher clear of sticky save controls on phone editing screens.

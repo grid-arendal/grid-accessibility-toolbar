@@ -23,12 +23,13 @@ Only **Accessibility Widget** and **Section and field names** default on. Label 
 ## Configure a website
 
 1. Open **GRID-Arendal → Modules & workspace**. Select the required modules. ACF is required for the workspace and field labels; LearnPress is required for LMS connections. Beaver Builder/Themer, ACF, GTranslate, WooCommerce and LearnPress remain separately maintained plugins.
-2. Create a normal WordPress page containing `[grid_workspace]`; select its page ID in the module settings. The workspace sends private/no-store/noindex headers and requires sign-in and existing editing rights.
-3. Include only the content types needed on that site. Choose their editable ACF groups. Unselected fields and metadata are not accepted from form submissions.
-4. Use **Section & field names** for display-name overrides. Empty values restore the originals. Custom post-type keys, existing slugs and stored ACF keys are never renamed.
-5. Optionally enable review and choose notification recipients. Reviewers must still have native per-record editing and publishing permission. WordPress authors/editors keep their existing authority; legacy RMS/NMS-only roles need a deliberate permission review before migration.
-6. For private files, create a writable directory **outside** the web root and supply its absolute path. The plugin refuses public-root/ancestor directories. Private-file readers must be able to edit the owning item; this is not a general staff document-sharing permission.
-7. For maps, enter the configured ACF coordinate **field keys**. Leaflet is bundled locally; opening the map contacts OpenStreetMap for tiles, with attribution. Existing Google Map fields still require their own ACF/provider configuration.
+2. Standard editable ACF groups are created automatically when ACF and their content types are available: Page details, Article details, Resource details (WooCommerce products) and Team details (AWSM Team). Open **GRID-Arendal → Field groups → Edit fields** to change their structure in ACF. Display-name overrides remain available under Section & field names. Existing edits and intentional group deletions are preserved; a later-installed content type receives its starter group then. These groups do not automatically change public Beaver templates.
+3. Create a normal WordPress page containing `[grid_workspace]`; select its page ID in the module settings. The workspace sends private/no-store/noindex headers and requires sign-in and existing editing rights.
+4. Include only the content types needed on that site. Choose their editable ACF groups. Unselected fields and metadata are not accepted from form submissions.
+5. Use **Section & field names** for display-name overrides. Empty values restore the originals. Custom post-type keys, existing slugs and stored ACF keys are never renamed.
+6. Optionally enable review and choose notification recipients. Reviewers must still have native per-record editing and publishing permission. WordPress authors/editors keep their existing authority; legacy RMS/NMS-only roles need a deliberate permission review before migration.
+7. For private files, create a writable directory **outside** the web root and supply its absolute path. The plugin refuses public-root/ancestor directories. Private-file readers must be able to edit the owning item; this is not a general staff document-sharing permission.
+8. For maps, enter the configured ACF coordinate **field keys**. Leaflet is bundled locally; opening the map contacts OpenStreetMap for tiles, with attribution. Existing Google Map fields still require their own ACF/provider configuration.
 
 ## Migration boundaries
 
@@ -39,3 +40,7 @@ The common workspace edits titles, summaries, descriptions and explicitly select
 Specialised legacy grievance workflows, protected-gallery migrations, existing region-drawing/geocoding tools, account synchronisation, remote course synchronisation, certificates and project-specific page migrations are not silently replaced by the common modules. Preserve those integrations until their separate migration and data checks are complete. Other GRID websites have not been modified by this deployment.
 
 The header/footer on access.grida.no is a Beaver Themer site layout, not forced onto websites installing this plugin. Its five current social links exclude X/Twitter.
+
+## Workspace navigation and system pages
+
+A WordPress menu item pointing to the configured workspace is automatically hidden from accounts without native permission to read that page and edit a configured section. Use a private workspace page to restrict access to editors and administrators. Descendant menu items are also removed. Excluded page IDs protect system pages from workspace listings and direct edit requests; the workspace page itself is always excluded. Authenticated editor responses are private and must not be cached as anonymous HTML.

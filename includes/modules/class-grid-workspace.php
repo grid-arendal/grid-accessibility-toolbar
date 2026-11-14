@@ -11,6 +11,7 @@ final class GRID_Arendal_Workspace {
         add_action( 'admin_post_grid_workspace_save', array( __CLASS__, 'save' ) );
         add_action( 'admin_post_nopriv_grid_workspace_save', array( __CLASS__, 'deny' ) );
         add_filter( 'the_content', array( __CLASS__, 'edit_link' ), 99 );
+        add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'menu_items' ), 99 );
         require_once __DIR__ . '/class-grid-editor-extras.php';
         GRID_Arendal_Editor_Extras::boot();
     }
@@ -23,7 +24,32 @@ final class GRID_Arendal_Workspace {
         $o = get_post_type_object( $type );
         return is_user_logged_in() && self::section( $type ) && $o && current_user_can( $o->cap->create_posts ?? $o->cap->edit_posts );
     }
-    public static function can_edit( $id ) { $p = get_post( $id ); return is_user_logged_in() && $p && self::section( $p->post_type ) && current_user_can( 'edit_post', $id ); }
+    public static function can_edit( $id ) { $p = get_post( $id ); return is_user_logged_in() && $p && ! in_array( (int) $id, self::excluded_pages(), true ) && self::section( $p->post_type ) && current_user_can( 'edit_post', $id ); }
+    public static function excluded_pages() { return array_values( array_unique( array_merge( array( self::page() ), array_map( 'intval', (array) GRID_Arendal_Core::settings()['excluded_pages'] ) ) ) ); }
+    public static function can_access() {
+        if ( ! GRID_Arendal_Core::ready( 'workspace' ) || ! is_user_logged_in() || ! self::page() || ! current_user_can( 'read_post', self::page() ) ) return false;
+        foreach ( array_keys( GRID_Arendal_Core::settings()['sections'] ) as $type ) if ( self::can_create( $type ) ) return true;
+        return false;
+    }
+    public static function matches_url( $url ) {
+        if ( ! self::page() || ! is_string( $url ) || '' === $url ) return false;
+        $target = wp_parse_url( get_permalink( self::page() ) ); $link = wp_parse_url( html_entity_decode( $url, ENT_QUOTES, 'UTF-8' ) );
+        if ( ! is_array( $target ) || ! is_array( $link ) ) return false;
+        if ( isset( $link['scheme'] ) && ! in_array( strtolower( $link['scheme'] ), array( 'http', 'https' ), true ) ) return false;
+        if ( isset( $link['host'] ) && strtolower( $link['host'] ) !== strtolower( $target['host'] ?? '' ) ) return false;
+        if ( isset( $link['host'] ) && (int) ( $link['port'] ?? ( 'https' === ( $link['scheme'] ?? '' ) ? 443 : 80 ) ) !== (int) ( $target['port'] ?? ( 'https' === ( $target['scheme'] ?? '' ) ? 443 : 80 ) ) ) return false;
+        if ( rtrim( $link['path'] ?? '/', '/' ) !== rtrim( $target['path'] ?? '/', '/' ) ) return false;
+        $q = array(); parse_str( $target['query'] ?? '', $q );
+        if ( isset( $q['page_id'] ) ) { $other = array(); parse_str( $link['query'] ?? '', $other ); return isset( $other['page_id'] ) && is_scalar( $other['page_id'] ) && (int) $other['page_id'] === (int) $q['page_id']; }
+        return true;
+    }
+    public static function menu_items( $items ) {
+        if ( self::can_access() ) return $items;
+        $removed = array();
+        foreach ( $items as $i ) if ( in_array( 'grid-workspace-link', (array) ( $i->classes ?? array() ), true ) || ( 'page' === ( $i->object ?? '' ) && self::page() && (int) ( $i->object_id ?? 0 ) === self::page() ) || self::matches_url( $i->url ?? '' ) ) $removed[(int) $i->ID] = true;
+        do { $changed = false; foreach ( $items as $i ) if ( isset( $removed[(int) ( $i->menu_item_parent ?? 0 )] ) && ! isset( $removed[(int) $i->ID] ) ) { $removed[(int) $i->ID] = true; $changed = true; } } while ( $changed );
+        return array_values( array_filter( $items, function( $i ) use ( $removed ) { return ! isset( $removed[(int) $i->ID] ); } ) );
+    }
     public static function can_review( $id ) {
         $p = get_post( $id ); $o = $p ? get_post_type_object( $p->post_type ) : null;
         return $o && self::can_edit( $id ) && current_user_can( $o->cap->publish_posts );
@@ -36,7 +62,7 @@ final class GRID_Arendal_Workspace {
     }
     public static function prepare() {
         if ( GRID_Accessibility_Toolbar::editor_active() ) return;
-        if ( self::page() && is_user_logged_in() && is_singular() && get_queried_object_id() !== self::page() && self::can_edit( get_queried_object_id() ) ) self::private_headers();
+        if ( self::can_access() || ( self::page() && self::matches_url( $_SERVER['REQUEST_URI'] ?? '' ) ) ) self::private_headers();
         if ( ! self::page() || ! is_page( self::page() ) ) return;
         self::private_headers();
         add_filter( 'body_class', function( $classes ) { $classes[] = 'grid-workspace-screen'; return $classes; } );
@@ -48,7 +74,7 @@ final class GRID_Arendal_Workspace {
     public static function fields( $type ) {
         $s = self::section( $type ); $out = array();
         foreach ( (array) ( $s['groups'] ?? array() ) as $key ) {
-            $g = acf_get_field_group( $key ); if ( ! $g ) continue;
+            $g = acf_get_field_group( $key ); if ( ! $g || ( isset( $g['active'] ) && ! $g['active'] ) ) continue;
             foreach ( (array) acf_get_fields( $g ) as $f ) if ( is_array( $f ) && isset( $f['key'] ) ) $out[$f['key']] = $f;
         }
         return $out;
@@ -64,6 +90,7 @@ final class GRID_Arendal_Workspace {
         if ( GRID_Accessibility_Toolbar::editor_active() ) return '<p>The private GRID-Arendal workspace appears here when you leave the layout editor.</p>';
         if ( ! self::page() || get_queried_object_id() !== self::page() ) return current_user_can( 'manage_options' ) ? '<p>Select this page under GRID-Arendal → Modules &amp; workspace before using the editor.</p>' : '';
         if ( ! is_user_logged_in() ) return '<section class="grid-workspace"><h2>Content workspace</h2><p>Please <a href="' . esc_url( wp_login_url( self::url() ) ) . '">sign in</a> with an authorised account.</p></section>';
+        if ( ! self::can_access() ) return '<p>This workspace is not available to this account.</p>';
         $types = array_filter( array_keys( GRID_Arendal_Core::settings()['sections'] ), array( __CLASS__, 'can_create' ) );
         if ( ! $types ) return '<p>No editable sections are available to this account. Contact your site administrator.</p>';
         $type = self::input( 'grid_section', reset( $types ) ); if ( ! in_array( $type, $types, true ) ) return '<p>This section is not available to this account.</p>';
@@ -80,6 +107,7 @@ final class GRID_Arendal_Workspace {
         $order = 'ASC' === self::input( 'grid_order', 'DESC' ) ? 'ASC' : 'DESC'; $search = self::input( 'grid_search' ); $page = max( 1, min( 10000, absint( self::input( 'grid_page', 1 ) ) ) );
         $o = get_post_type_object( $type ); $args = array( 'post_type' => $type, 'post_status' => array( 'publish', 'private', 'draft', 'pending' ), 'posts_per_page' => 20, 'paged' => $page, 's' => $search, 'orderby' => $sort, 'order' => $order );
         if ( ! current_user_can( $o->cap->edit_others_posts ) ) $args['author'] = get_current_user_id();
+        if ( 'page' === $type ) $args['post__not_in'] = self::excluded_pages();
         $query = new WP_Query( $args );
         echo '<div class="grid-workspace-actions"><h3>' . esc_html( self::label( $type ) ) . '</h3><a class="grid-button" href="' . esc_url( self::url( array( 'grid_section' => $type, 'grid_action' => 'edit' ) ) ) . '">Add new draft</a></div><form method="get" action="' . esc_url( get_permalink( self::page() ) ) . '"><input type="hidden" name="grid_section" value="' . esc_attr( $type ) . '"><label>Search this section <input type="search" name="grid_search" value="' . esc_attr( $search ) . '"></label><button type="submit">Search</button></form>';
         echo '<div class="grid-table-scroll"><table><caption class="screen-reader-text">' . esc_html( self::label( $type ) ) . '</caption><thead><tr>';
@@ -124,7 +152,7 @@ final class GRID_Arendal_Workspace {
             echo '<p>Basic formatting and links are supported. Scripts and embedded editor code are not accepted.</p>';
         }
         foreach ( (array) self::section( $type )['groups'] as $key ) {
-            $group = acf_get_field_group( $key ); if ( ! $group ) continue;
+            $group = acf_get_field_group( $key ); if ( ! $group || ( isset( $group['active'] ) && ! $group['active'] ) ) continue;
             echo '<section class="grid-acf-group"><h4>' . esc_html( $group['title'] ) . '</h4><div class="acf-fields">';
             foreach ( (array) acf_get_fields( $group ) as $f ) { $f['value'] = $id ? get_field( $f['key'], $id, false ) : ( $f['default_value'] ?? null ); if ( $pending && array_key_exists( $f['key'], $pending['data']['fields'] ?? array() ) ) $f['value'] = $pending['data']['fields'][$f['key']]; acf_render_fields( array( $f ), $id ); }
             echo '</div></section>';
