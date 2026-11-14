@@ -1,14 +1,15 @@
-# GRID Accessibility Toolbar
+# GRID-Arendal
 
-GRID-Arendal WordPress accessibility widget with public, credential-free release updates.
+A reusable WordPress plugin combining visitor accessibility controls and configurable shared editorial tools. Install the **release ZIP**, not GitHub's source-code archive.
 
-Install the **grid-accessibility-toolbar-x.y.z.zip** asset from [Releases](https://github.com/grid-arendal/grid-accessibility-toolbar/releases). Do not upload GitHub's automatic source archive.
+Accessibility and empty section-label overrides default on. Front-end editing, review, CSV imports, notifications, private files, coordinate editing and LearnPress connections are optional. Existing data keys, URL slugs, user permissions and accessibility settings are preserved. Other plugins and project-specific workflows are not automatically migrated or disabled.
 
-Once this updater-enabled ZIP is installed, each website can receive normal WordPress update notices without a GitHub account or token. Automatic installation remains an administrator choice. [How updates work](docs/UPDATES.md).
+See [MODULES.md](MODULES.md) for module setup, dependencies and migration boundaries. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins. No automated WCAG compliance claim is made.
 
-- [Installation](docs/INSTALLATION.md)
-- [Update publishing](docs/UPDATES.md)
-- [Code license](LICENSE.txt)
-- [Fonts and bundled components](THIRD-PARTY-NOTICES.txt)
+## Updates and releases
 
-Visitor-controlled reading preferences, compact GRID branding, GTranslate integration and a dedicated GRID-Arendal admin menu. The widget does not certify WCAG compliance or supply a screen reader. Source, release ZIPs and documentation contain no website passwords or visitor data.
+Websites use the public update feed and published stable ZIPs without GitHub credentials. Updates appear in the normal WordPress update interface; automatic installation remains a site administrator's WordPress preference.
+
+Set the matching stable version in the main PHP header/constant and readme, update release notes, review the source and either dispatch the release workflow or create a deliberate `release/x.y.z` branch from the reviewed commit. CI validates PHP, JavaScript, configuration/input tests, updater policy and the installable ZIP. Update metadata is published only after the release asset exists.
+
+The directory remains `grid-accessibility-toolbar` for upgrade compatibility.

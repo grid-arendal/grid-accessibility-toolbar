@@ -9,3 +9,6 @@
     object-fit: contain;
     vertical-align: top;
 }
+
+.grid-admin-section { max-width: 1100px; padding: 16px 20px; margin: 14px 0; background: #fff; border: 1px solid #d4c3db; border-radius: 8px; }
+.grid-admin-section summary { cursor: pointer; padding: 4px 0; }

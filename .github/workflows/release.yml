@@ -6,7 +6,7 @@ on:
       version:
         description: Stable plugin version (must match source headers and readme)
         required: true
-        default: '1.11.2'
+        default: '2.0.0'
 permissions:
   contents: write
 concurrency:
@@ -37,6 +37,9 @@ jobs:
         run: |
           find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
           php tests/php-unit.php
+          php tests/modules.php
+          node --check assets/toolbar.js
+          node --check assets/workspace.js
           php tests/updater/public-updates.php
       - name: Build and validate installable ZIP
         run: python3 tools/build-release.py --source . --output dist --version "$RELEASE_VERSION"

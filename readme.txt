@@ -1,9 +1,9 @@
-=== GRID Accessibility Toolbar ===
+=== GRID-Arendal ===
 Contributors: grid-arendal
 Tags: accessibility, reading, toolbar
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 1.11.2
+Stable tag: 2.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,7 +24,7 @@ This is original code, independent of UserWay. It does not reproduce UserWay ser
 == Installation ==
 
 1. In WordPress, choose Plugins > Add New Plugin > Upload Plugin.
-2. Upload grid-accessibility-toolbar-1.11.2.zip and click Install Now.
+2. Upload grid-accessibility-toolbar-2.0.0.zip and click Install Now.
 3. Activate GRID Accessibility Toolbar.
 4. Open GRID-Arendal > Accessibility Widget and save your preferred options.
 5. Clear site/CDN caches and test a public page while signed out.
@@ -60,6 +60,12 @@ Eight transparent presets: Motor Impaired, Blind, Color Blind, Dyslexia, Low vis
 OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed under SIL OFL 1.1; see assets/fonts/OFL.txt and THIRD-PARTY-NOTICES.txt. OpenDyslexic is fetched from your own site only when selected. The interface uses locally hosted Geologica Regular and SemiBold, also under SIL OFL 1.1; see assets/fonts/Geologica-OFL.txt.
 
 == Changelog ==
+
+= 2.0.0 =
+* Consolidate shared GRID editorial tools as opt-in modules alongside accessibility.
+* Configure ACF group/field and content-type display names without changing data keys or URLs.
+* Add a permission-based frontend workspace, review and activity, CSV draft import, private files, coordinate editing and LearnPress course connections.
+* Editorial modules are off by default; no roles, existing plugins or content are automatically migrated.
 
 = 1.11.2 =
 * Restyle the language reset as a discreet text control, retaining visible keyboard focus and generous touch targets.
@@ -122,3 +128,7 @@ OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed 
 
 = 1.0.0 =
 * Initial independent toolbar, site settings, local preferences and editor safeguards.
+
+== Optional editorial tools ==
+
+GRID-Arendal → Modules & workspace provides a permission-based ACF content workspace, editorial review, CSV draft imports, explicit reviewer notifications, private files, coordinate editing and LearnPress course connections. New editorial modules default off. Section & field names changes display labels without changing saved keys or URL slugs. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins. Configure and test a section before migrating its existing editor. Specialised legacy workflows and data are not automatically converted.

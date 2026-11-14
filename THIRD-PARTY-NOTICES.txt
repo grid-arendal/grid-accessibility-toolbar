@@ -16,3 +16,5 @@ Plugin Update Checker 6.0 — Janis (Yahnis) Elsts, MIT license.
 Unmodified runtime source pinned to upstream tag v6.0.
 https://github.com/YahnisElsts/plugin-update-checker/tree/v6.0
 See vendor/plugin-update-checker/license.txt and SOURCE.txt.
+
+Leaflet 1.9.4 — copyright Vladimir Agafonkin and contributors, BSD-2-Clause. Bundled unmodified from https://unpkg.com/leaflet@1.9.4/dist/ . License: assets/leaflet/LICENSE.txt. Only loaded in the optional private editing workspace when the maps module is enabled.

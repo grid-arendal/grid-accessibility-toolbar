@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: GRID Accessibility Toolbar
- * Description: Independent, local visitor reading preferences for GRID-Arendal sites. Does not certify accessibility or WCAG conformance.
- * Version: 1.11.2
+ * Plugin Name: GRID-Arendal
+ * Description: Configurable GRID-Arendal tools: accessibility, ACF section names, front-end editing, review, resource imports, private files, maps and LMS connections.
+ * Version: 2.0.0
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '1.11.2';
+    const VERSION = '2.0.0';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
@@ -328,7 +328,8 @@ final class GRID_Accessibility_Toolbar {
 
     public static function admin_overview() {
         if ( ! current_user_can( 'manage_options' ) ) return;
-        echo '<div class="wrap"><h1>' . esc_html__( 'GRID-Arendal', 'grid-accessibility-toolbar' ) . '</h1><h2>' . esc_html__( 'Accessibility Widget', 'grid-accessibility-toolbar' ) . '</h2><p>' . esc_html__( 'Help visitors choose how they read and navigate your website. Configure the widget controls, profiles, appearance and translation integration.', 'grid-accessibility-toolbar' ) . '</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-a11y' ) ) . '">' . esc_html__( 'Manage Accessibility Widget', 'grid-accessibility-toolbar' ) . '</a></p></div>';
+        echo '<div class="wrap"><h1>GRID-Arendal</h1><p>One configurable plugin for visitor accessibility and optional editorial tools.</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-modules' ) ) . '">Modules &amp; workspace</a> <a class="button" href="' . esc_url( admin_url( 'admin.php?page=grid-labels' ) ) . '">Section &amp; field names</a></p></div>';
+        echo '<div class="wrap"><h2>' . esc_html__( 'Accessibility Widget', 'grid-accessibility-toolbar' ) . '</h2><p>' . esc_html__( 'Help visitors choose how they read and navigate your website. Configure the widget controls, profiles, appearance and translation integration.', 'grid-accessibility-toolbar' ) . '</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-a11y' ) ) . '">' . esc_html__( 'Manage Accessibility Widget', 'grid-accessibility-toolbar' ) . '</a></p></div>';
     }
 
     public static function admin_page() {
@@ -381,6 +382,9 @@ add_action( 'network_admin_notices', array( 'GRID_Accessibility_Toolbar', 'depen
 add_action( 'admin_menu', array( 'GRID_Accessibility_Toolbar', 'admin_menu' ) );
 add_action( 'admin_enqueue_scripts', array( 'GRID_Accessibility_Toolbar', 'admin_assets' ) );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( 'GRID_Accessibility_Toolbar', 'action_links' ) );
+
+require_once __DIR__ . '/includes/class-grid-core.php';
+GRID_Arendal_Core::boot();
 
 require_once __DIR__ . '/includes/class-grid-plugin-updates.php';
 GRID_A11Y_Plugin_Updates::register( __FILE__ );
