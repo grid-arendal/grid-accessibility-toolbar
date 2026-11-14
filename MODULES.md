@@ -24,7 +24,7 @@ Only **Accessibility Widget** and **Section and field names** default on. Label 
 
 1. Open **GRID-Arendal → Modules & workspace**. Select the required modules. ACF is required for the workspace and field labels; LearnPress is required for LMS connections. Beaver Builder/Themer, ACF, GTranslate, WooCommerce and LearnPress remain separately maintained plugins.
 2. Standard editable ACF groups are created automatically when ACF and their content types are available: Page details, Article details, Resource details (WooCommerce products) and Team details (AWSM Team). Open **GRID-Arendal → Field groups → Edit fields** to change their structure in ACF. Display-name overrides remain available under Section & field names. Existing edits and intentional group deletions are preserved; a later-installed content type receives its starter group then. These groups do not automatically change public Beaver templates.
-3. Create a normal WordPress page containing `[grid_workspace]`; select its page ID in the module settings. The workspace sends private/no-store/noindex headers and requires sign-in and existing editing rights.
+3. On first enabling the workspace, a private page containing `[grid_workspace]` and starter Post/Page sections are created if none are configured. You may instead select your own shortcode page in module settings. The workspace sends private/no-store/noindex headers and requires sign-in and existing editing rights.
 4. Include only the content types needed on that site. Choose their editable ACF groups. Unselected fields and metadata are not accepted from form submissions.
 5. Use **Section & field names** for display-name overrides. Empty values restore the originals. Custom post-type keys, existing slugs and stored ACF keys are never renamed.
 6. Optionally enable review and choose notification recipients. Reviewers must still have native per-record editing and publishing permission. WordPress authors/editors keep their existing authority; legacy RMS/NMS-only roles need a deliberate permission review before migration.
@@ -44,3 +44,11 @@ The header/footer on access.grida.no is a Beaver Themer site layout, not forced 
 ## Workspace navigation and system pages
 
 A WordPress menu item pointing to the configured workspace is automatically hidden from accounts without native permission to read that page and edit a configured section. Use a private workspace page to restrict access to editors and administrators. Descendant menu items are also removed. Excluded page IDs protect system pages from workspace listings and direct edit requests; the workspace page itself is always excluded. Authenticated editor responses are private and must not be cached as anonymous HTML.
+
+## Automatic editor login icon (2.0.4)
+
+Enabling the front-end workspace automatically adds a 24px account icon with a 44px minimum touch target and an accessible label to the first main classic WordPress menu rendered by the theme or Beaver Themer. Automatic selection skips footer, social, sidebar, utility and secondary menus. Under Modules & workspace → Editor login menu, select an explicit menu if the site renders another menu first, or choose Do not add an icon. Block Navigation menus are not modified.
+
+Signed-out visitors see Sign in to the editor workspace, using WordPress login with a return URL. Editors with native access open the workspace directly; other signed-in accounts see no icon. Existing top-level workspace links in that menu are reused. Icons are rendered dynamically without inserting menu records, so disabling the module removes automatic links. Native permissions are unchanged.
+
+First-enable setup runs once on an administrator visit after the module becomes available. It preserves existing pages/sections, does not recreate a deliberately cleared workspace setting, and never publishes the private workspace to visitors.

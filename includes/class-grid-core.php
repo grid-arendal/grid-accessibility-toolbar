@@ -19,7 +19,7 @@ final class GRID_Arendal_Core {
     }
     public static function settings() {
         $s = get_option( self::OPTION, array() );
-        return array_merge( array( 'modules' => array( 'accessibility', 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'excluded_pages' => array(), 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
+        return array_merge( array( 'modules' => array( 'accessibility', 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'workspace_menu' => 0, 'excluded_pages' => array(), 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
     }
     public static function enabled( $key ) { return in_array( $key, (array) self::settings()['modules'], true ); }
     public static function ready( $key, $seen = array() ) {
@@ -70,6 +70,10 @@ final class GRID_Arendal_Core {
         $out['modules'] = array_values( array_intersect( array_keys( self::catalog() ), $mods ) );
         $out['workspace_page'] = isset( $input['workspace_page'] ) && is_scalar( $input['workspace_page'] ) ? absint( $input['workspace_page'] ) : 0;
         if ( $out['workspace_page'] && 'page' !== get_post_type( $out['workspace_page'] ) ) $out['workspace_page'] = 0;
+        if ( isset( $input['workspace_menu'] ) && is_scalar( $input['workspace_menu'] ) ) {
+            $menu = '-1' === (string) $input['workspace_menu'] ? -1 : absint( $input['workspace_menu'] );
+            $out['workspace_menu'] = $menu <= 0 || wp_get_nav_menu_object( $menu ) ? $menu : 0;
+        }
         $out['excluded_pages'] = array();
         $excluded = $input['excluded_pages'] ?? array();
         if ( is_string( $excluded ) ) $excluded = preg_split( '/[\s,]+/', $excluded );
@@ -115,7 +119,11 @@ final class GRID_Arendal_Core {
         foreach ( self::catalog() as $key => $m ) {
             echo '<tr><td><label><input type="checkbox" name="' . esc_attr( self::OPTION ) . '[modules][]" value="' . esc_attr( $key ) . '" ' . checked( self::enabled( $key ), true, false ) . '> <strong>' . esc_html( $m[0] ) . '</strong></label></td><td>' . esc_html( $m[1] ) . '</td><td>' . esc_html( ! self::enabled( $key ) ? 'Off' : ( self::ready( $key ) ? 'Available' : 'Waiting for required module/plugin' ) ) . '</td></tr>';
         }
-        echo '</tbody></table><h2>Front-end workspace</h2><p>Place <code>[grid_workspace]</code> on a normal WordPress page, then select that page below. It is private to signed-in users with existing per-content editing permissions. No roles or capabilities are granted by this plugin. Course, order and builder editors are excluded.</p><label>Workspace page ID <input type="number" min="0" name="' . esc_attr( self::OPTION ) . '[workspace_page]" value="' . esc_attr( $s['workspace_page'] ) . '"></label><p><label>Excluded page IDs (comma-separated) <input class="regular-text" name="' . esc_attr( self::OPTION ) . '[excluded_pages]" value="' . esc_attr( implode( ', ', $s['excluded_pages'] ) ) . '"></label></p><p>Exclude system or special-purpose pages from this editor. The workspace page is always protected. A menu item linking to the workspace is automatically shown only to signed-in users who can read that page and edit a configured section.</p><h3>Content sections</h3><p>Choose content types and the ACF groups their forms may edit. Only selected field groups are accepted on submission. Content keys, relationships, commerce fields and builder layouts outside the form are retained.</p>';
+        echo '</tbody></table><h2>Front-end workspace</h2><p>On first enabling this module, a private workspace page and Page/Article sections are created automatically if none are configured. You can select another page containing <code>[grid_workspace]</code> below. It is private to signed-in users with existing per-content editing permissions. No roles or capabilities are granted by this plugin. Course, order and builder editors are excluded.</p><label>Workspace page ID <input type="number" min="0" name="' . esc_attr( self::OPTION ) . '[workspace_page]" value="' . esc_attr( $s['workspace_page'] ) . '"></label><p><label>Excluded page IDs (comma-separated) <input class="regular-text" name="' . esc_attr( self::OPTION ) . '[excluded_pages]" value="' . esc_attr( implode( ', ', $s['excluded_pages'] ) ) . '"></label></p><p>Exclude system or special-purpose pages from this editor. The workspace page is always protected. An account icon is added automatically to the first main menu: visitors can sign in and return to the workspace; authorised editors open it directly. Other signed-in accounts do not see the icon. Existing workspace links are reused. No menu records are created; disabling this module removes automatic icons.</p>';
+        echo '<p><label>Editor login menu <select name="' . esc_attr( self::OPTION ) . '[workspace_menu]">';
+        foreach ( array( 0 => 'Automatic — first main menu', -1 => 'Do not add an icon' ) as $id => $label ) echo '<option value="' . esc_attr( $id ) . '" ' . selected( (int) $s['workspace_menu'], $id, false ) . '>' . esc_html( $label ) . '</option>';
+        foreach ( wp_get_nav_menus() as $menu ) echo '<option value="' . esc_attr( $menu->term_id ) . '" ' . selected( (int) $s['workspace_menu'], (int) $menu->term_id, false ) . '>' . esc_html( $menu->name ) . '</option>';
+        echo '</select></label></p><h3>Content sections</h3><p>Choose content types and the ACF groups their forms may edit. Only selected field groups are accepted on submission. Content keys, relationships, commerce fields and builder layouts outside the form are retained.</p>';
         foreach ( self::permitted_types() as $type => $obj ) {
             $v = $s['sections'][$type] ?? array(); $name = self::OPTION . '[sections][' . $type . ']';
             echo '<details class="grid-admin-section"><summary><strong>' . esc_html( $obj->label ) . '</strong> <code>' . esc_html( $type ) . '</code></summary><p><label><input type="checkbox" name="' . esc_attr( $name ) . '[enabled]" value="1" ' . checked( isset( $s['sections'][$type] ), true, false ) . '> Include in workspace</label></p><p><label>Workspace name <input name="' . esc_attr( $name ) . '[label]" value="' . esc_attr( $v['label'] ?? '' ) . '" placeholder="' . esc_attr( $obj->label ) . '"></label></p><fieldset><legend>Editable ACF groups</legend>';

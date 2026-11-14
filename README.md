@@ -15,3 +15,5 @@ Websites use the public update feed and published stable ZIPs without GitHub cre
 Set the matching stable version in the main PHP header/constant and readme, update release notes, review the source and either dispatch the release workflow or create a deliberate `release/x.y.z` branch from the reviewed commit. CI validates PHP, JavaScript, configuration/input tests, updater policy and the installable ZIP. Update metadata is published only after the release asset exists.
 
 The directory remains `grid-accessibility-toolbar` for upgrade compatibility.
+
+The optional workspace now creates its private page and starter sections on first enable if needed, and automatically adds an accessible login/editor account icon to a main WordPress/Beaver Themer menu. Administrators can choose a menu or disable the icon. Native editorial permissions remain unchanged.

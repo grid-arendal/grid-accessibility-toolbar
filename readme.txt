@@ -3,7 +3,7 @@ Contributors: grid-arendal
 Tags: accessibility, reading, toolbar
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -60,6 +60,11 @@ Eight transparent presets: Motor Impaired, Blind, Color Blind, Dyslexia, Low vis
 OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed under SIL OFL 1.1; see assets/fonts/OFL.txt and THIRD-PARTY-NOTICES.txt. OpenDyslexic is fetched from your own site only when selected. The interface uses locally hosted Geologica Regular and SemiBold, also under SIL OFL 1.1; see assets/fonts/Geologica-OFL.txt.
 
 == Changelog ==
+
+= 2.0.4 =
+* Automatically add an accessible account icon to the main menu when the front-end workspace is enabled. Visitors sign in with a return link; authorised editors open the workspace directly.
+* Reuse existing workspace links, offer a menu selector and opt-out, and create a private workspace with starter Page/Article sections on first enable if needed.
+
 
 = 2.0.3 =
 * Keep hidden table accessibility labels within the workspace scroll region to prevent page-wide phone overflow.

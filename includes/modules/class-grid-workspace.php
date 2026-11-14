@@ -5,13 +5,17 @@ final class GRID_Arendal_Workspace {
     const PENDING = '_grid_editor_pending';
     const LOG = '_grid_editor_activity';
     private static $error = '';
+    private static $navigation_menu = 0;
     public static function boot() {
         add_shortcode( 'grid_workspace', array( __CLASS__, 'screen' ) );
         add_action( 'template_redirect', array( __CLASS__, 'prepare' ), 1 );
         add_action( 'admin_post_grid_workspace_save', array( __CLASS__, 'save' ) );
         add_action( 'admin_post_nopriv_grid_workspace_save', array( __CLASS__, 'deny' ) );
         add_filter( 'the_content', array( __CLASS__, 'edit_link' ), 99 );
-        add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'menu_items' ), 99 );
+        add_action( 'admin_init', array( __CLASS__, 'setup' ), 40 );
+        add_action( 'wp_enqueue_scripts', array( __CLASS__, 'navigation_assets' ) );
+        add_filter( 'wp_nav_menu_objects', array( __CLASS__, 'menu_items' ), 99, 2 );
+        add_filter( 'wp_nav_menu_items', array( __CLASS__, 'navigation_item' ), 99, 2 );
         require_once __DIR__ . '/class-grid-editor-extras.php';
         GRID_Arendal_Editor_Extras::boot();
     }
@@ -43,12 +47,73 @@ final class GRID_Arendal_Workspace {
         if ( isset( $q['page_id'] ) ) { $other = array(); parse_str( $link['query'] ?? '', $other ); return isset( $other['page_id'] ) && is_scalar( $other['page_id'] ) && (int) $other['page_id'] === (int) $q['page_id']; }
         return true;
     }
-    public static function menu_items( $items ) {
-        if ( self::can_access() ) return $items;
+    public static function menu_items( $items, $args = null ) {
+        if ( self::can_access() ) {
+            if ( self::navigation_target( $args ) ) foreach ( $items as $i ) if ( empty( $i->menu_item_parent ) && self::matches_url( $i->url ?? '' ) ) {
+                $i->title = self::navigation_icon( 'Editor workspace' );
+                $i->classes = array_merge( (array) ( $i->classes ?? array() ), array( 'grid-workspace-icon' ) );
+                $i->url = self::url();
+                break;
+            }
+            return $items;
+        }
         $removed = array();
         foreach ( $items as $i ) if ( in_array( 'grid-workspace-link', (array) ( $i->classes ?? array() ), true ) || ( 'page' === ( $i->object ?? '' ) && self::page() && (int) ( $i->object_id ?? 0 ) === self::page() ) || self::matches_url( $i->url ?? '' ) ) $removed[(int) $i->ID] = true;
         do { $changed = false; foreach ( $items as $i ) if ( isset( $removed[(int) ( $i->menu_item_parent ?? 0 )] ) && ! isset( $removed[(int) $i->ID] ) ) { $removed[(int) $i->ID] = true; $changed = true; } } while ( $changed );
         return array_values( array_filter( $items, function( $i ) use ( $removed ) { return ! isset( $removed[(int) $i->ID] ); } ) );
+    }
+    /** Provision once on the first administrator visit after enabling the module. */
+    public static function setup() {
+        if ( ! current_user_can( 'manage_options' ) || ! GRID_Arendal_Core::ready( 'workspace' ) ) return;
+        $s = GRID_Arendal_Core::settings();
+        if ( get_option( 'grid_arendal_workspace_setup_done', false ) ) return;
+        global $wpdb; $lock = 'grid_workspace_setup_' . get_current_blog_id();
+        if ( '1' !== (string) $wpdb->get_var( $wpdb->prepare( 'SELECT GET_LOCK(%s, 0)', $lock ) ) ) return;
+        try {
+            $s = GRID_Arendal_Core::settings();
+            if ( get_option( 'grid_arendal_workspace_setup_done', false ) ) return;
+            if ( ! $s['workspace_page'] ) {
+                $id = wp_insert_post( array( 'post_type' => 'page', 'post_status' => 'private', 'post_title' => 'Editor workspace', 'post_content' => '[grid_workspace]' ), true );
+                if ( is_wp_error( $id ) || ! $id ) return;
+                $s['workspace_page'] = (int) $id;
+            }
+            if ( empty( $s['sections'] ) ) foreach ( array( 'post' => 'group_grid_article_details', 'page' => 'group_grid_page_details' ) as $type => $group ) {
+                if ( isset( GRID_Arendal_Core::permitted_types()[$type] ) ) $s['sections'][$type] = array( 'label' => '', 'groups' => acf_get_field_group( $group ) ? array( $group ) : array(), 'latitude' => '', 'longitude' => '' );
+            }
+            // Registered settings sanitization also applies to programmatic saves.
+            foreach ( $s['sections'] as &$section ) $section['enabled'] = 1;
+            unset( $section );
+            update_option( GRID_Arendal_Core::OPTION, $s, false );
+            update_option( 'grid_arendal_workspace_setup_done', true, false );
+        } finally { $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock ) ); }
+    }
+    public static function navigation_ready() {
+        return GRID_Arendal_Core::ready( 'workspace' ) && self::page() && 'page' === get_post_type( self::page() ) && in_array( get_post_status( self::page() ), array( 'private', 'publish' ), true ) && (bool) array_intersect_key( GRID_Arendal_Core::settings()['sections'], GRID_Arendal_Core::permitted_types() );
+    }
+    public static function navigation_target( $args ) {
+        if ( ! self::navigation_ready() || ! is_object( $args ) ) return false;
+        $chosen = (int) GRID_Arendal_Core::settings()['workspace_menu'];
+        if ( -1 === $chosen ) return false;
+        $menu = wp_get_nav_menu_object( $args->menu ?? 0 );
+        if ( ! $menu || is_wp_error( $menu ) ) return false;
+        if ( $chosen > 0 ) return $chosen === (int) $menu->term_id;
+        // Themer often supplies an explicit menu rather than a theme location.
+        // Choose the first non-footer/navigation menu and reuse that menu only.
+        if ( preg_match( '/footer|social|sidebar|utility|secondary|bottom/i', ( $args->theme_location ?? '' ) . ' ' . $menu->name . ' ' . $menu->slug ) ) return false;
+        if ( ! self::$navigation_menu ) self::$navigation_menu = (int) $menu->term_id;
+        return self::$navigation_menu === (int) $menu->term_id;
+    }
+    public static function navigation_icon( $label ) {
+        return '<svg class="grid-workspace-login-svg" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="8" r="4"/><path d="M4 21v-2a8 8 0 0 1 16 0v2"/></svg><span class="grid-workspace-login-label">' . esc_html( $label ) . '</span>';
+    }
+    public static function navigation_item( $html, $args ) {
+        if ( ! self::navigation_target( $args ) || ( is_user_logged_in() && ! self::can_access() ) || false !== strpos( $html, 'grid-workspace-icon' ) ) return $html;
+        $label = self::can_access() ? 'Editor workspace' : 'Sign in to the editor workspace';
+        $url = self::can_access() ? self::url() : wp_login_url( self::url() );
+        return $html . '<li class="menu-item grid-workspace-icon"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr( $label ) . '">' . self::navigation_icon( $label ) . '</a></li>';
+    }
+    public static function navigation_assets() {
+        if ( self::navigation_ready() && -1 !== (int) GRID_Arendal_Core::settings()['workspace_menu'] ) wp_enqueue_style( 'grid-workspace-navigation', plugins_url( '../../assets/workspace-navigation.css', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION );
     }
     public static function can_review( $id ) {
         $p = get_post( $id ); $o = $p ? get_post_type_object( $p->post_type ) : null;
