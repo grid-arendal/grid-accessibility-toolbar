@@ -1,16 +1,16 @@
 {
   "name": "vendor",
   "slug": "grid-editorial-tools",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
   "author": "GRID-Arendal",
   "author_homepage": "https://www.grida.no/",
   "requires": "6.4",
   "requires_php": "7.4",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/editorial-v1.0.0/grid-editorial-tools-1.0.0.zip",
-  "sha256": "e2f2ed3c5e2bd26fc8909b07bd47afe8e05819cad3c7c6fed02ac53531fce110",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/editorial-v1.0.1/grid-editorial-tools-1.0.1.zip",
+  "sha256": "cc0ff7c2b2b1f01bdbffd29fb5008323ea2c340ac820cdf51fb87aa49130a636",
   "sections": {
     "description": "<p>Independent GRID-Arendal editorial plugin. Configure and update this product separately.</p>",
-    "changelog": "<p>Independent GRID Editorial Tools plugin: ACF groups/labels, optional content workspace and account icon, review/imports/notifications, protected files, maps and LMS adapters. Retains existing editorial settings and field/content keys. Safe staging beside combined 2.x; standalone operation without the widget; independent admin menu, assets, version and update feed.<br></p>"
+    "changelog": "<p>Removes the custom Plugin updates admin section. Published-release checks, update notifications and installation continue through the normal WordPress Plugins and Updates screens. No settings or content are changed.<br></p>"
   }
 }
