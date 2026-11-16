@@ -1,0 +1,16 @@
+{
+  "name": "vendor",
+  "slug": "grid-accessibility-toolbar",
+  "version": "3.0.0",
+  "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
+  "author": "GRID-Arendal",
+  "author_homepage": "https://www.grida.no/",
+  "requires": "6.4",
+  "requires_php": "7.4",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v3.0.0/grid-accessibility-toolbar-3.0.0.zip",
+  "sha256": "80baef0a69ef3394c22941036f60e75b89e1800f876639c302d4c70d41ac9425",
+  "sections": {
+    "description": "<p>Independent GRID-Arendal widget plugin. Configure and update this product separately.</p>",
+    "changelog": "<p>Standalone visitor accessibility widget. Editorial runtime and assets are extracted to GRID Editorial Tools; install Editorial Tools first on existing combined sites. Widget settings, visitor preferences, installed directory and asset URLs are preserved. Independent widget update feed; the legacy combined feed remains frozen at 2.0.4.<br></p>"
+  }
+}
