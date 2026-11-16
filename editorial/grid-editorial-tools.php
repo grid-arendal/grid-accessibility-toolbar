@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Editorial Tools
  * Description: Optional GRID-Arendal content workspace, ACF groups and labels, review, imports, private files, maps and LMS connections. Independent of the accessibility widget.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-editorial-tools
@@ -12,7 +12,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 final class GRID_Editorial_Tools {
-    const VERSION = '1.0.0';
+    const VERSION = '1.0.1';
     public static function editor_active() {
         if ( is_admin() || is_customize_preview() || is_preview() || is_feed() || is_embed() ) {
             return true;

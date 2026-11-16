@@ -1,1 +1,1 @@
-Standalone visitor accessibility widget. Editorial runtime and assets are extracted to GRID Editorial Tools; install Editorial Tools first on existing combined sites. Widget settings, visitor preferences, installed directory and asset URLs are preserved. Independent widget update feed; the legacy combined feed remains frozen at 2.0.4.
+Removes the custom Plugin updates admin section. Published-release checks, update notifications and installation continue through the normal WordPress Plugins and Updates screens. No settings or content are changed.

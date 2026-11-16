@@ -4,8 +4,8 @@ Two independently installed and updated products share this source repository:
 
 | Product | Source | Version | Release ZIP |
 |---|---|---|---|
-| GRID Accessibility Widget | repository root | 3.0.0 | grid-accessibility-toolbar-3.0.0.zip |
-| GRID Editorial Tools | editorial/ | 1.0.0 | grid-editorial-tools-1.0.0.zip |
+| GRID Accessibility Widget | repository root | 3.0.1 | grid-accessibility-toolbar-3.0.1.zip |
+| GRID Editorial Tools | editorial/ | 1.0.1 | grid-editorial-tools-1.0.1.zip |
 
 Neither runtime depends on the other. Install either or both. Third-party WordPress dependencies remain separate.
 

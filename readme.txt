@@ -2,7 +2,7 @@
 Contributors: grid-arendal
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 3.0.0
+Stable tag: 3.0.1
 License: GPLv2 or later
 
 GRID-Arendal visitor reading preferences and optional GTranslate integration.
@@ -23,6 +23,9 @@ Existing combined 2.x sites: install and activate GRID Editorial Tools first, th
 Standalone releases use widget-updates.json and v3.x.x release assets. The legacy combined updates.json feed remains frozen at 2.0.4 to prevent destructive automatic migrations. No per-site GitHub credentials are needed. WordPress automatic installation remains the administrator's choice.
 
 == Changelog ==
+= 3.0.1 =
+* Remove the custom Plugin updates settings page. Update checks and installation remain available through WordPress Plugins and Updates.
+
 = 3.0.0 =
 * Split visitor accessibility into its own runtime, settings/admin surface and independent release/update channel.
 * Preserve existing widget settings, visitor preference keys and installed directory.

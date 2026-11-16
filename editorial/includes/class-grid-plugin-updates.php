@@ -12,7 +12,6 @@ final class GRID_Editorial_Plugin_Updates {
     public static function register( $plugin_file ) {
         self::$plugin_file = $plugin_file;
         add_action( 'plugins_loaded', array( __CLASS__, 'boot' ) );
-        add_action( 'admin_menu', array( __CLASS__, 'menu' ), 20 );
     }
 
     public static function enabled() {
@@ -38,17 +37,4 @@ final class GRID_Editorial_Plugin_Updates {
         return $expected === $info->download_url ? $info : null;
     }
 
-    public static function menu() {
-        add_submenu_page( 'grid-editorial-tools', __( 'Plugin updates', 'grid-editorial-tools' ), __( 'Plugin updates', 'grid-editorial-tools' ), 'manage_options', 'grid-editorial-updates', array( __CLASS__, 'admin_page' ) );
-    }
-
-    public static function admin_page() {
-        if ( ! current_user_can( 'manage_options' ) ) return;
-        echo '<div class="wrap"><h1>' . esc_html__( 'GRID-Arendal plugin updates', 'grid-editorial-tools' ) . '</h1>';
-        echo '<p>' . esc_html__( 'Updates come from published stable releases in GRID-Arendal’s public GitHub repository. No GitHub account, access token or website registration is needed.', 'grid-editorial-tools' ) . '</p>';
-        echo '<div class="notice notice-info inline"><p>' . esc_html( self::enabled() ? __( 'Release update checks are enabled. Use Check for updates on the Installed Plugins screen. WordPress checks periodically; automatic installation remains your choice.', 'grid-editorial-tools' ) : __( 'Update checks are disabled by the server’s GRID_EDITORIAL_ENABLE_UPDATES setting. Editorial tools still work normally.', 'grid-editorial-tools' ) ) . '</p></div>';
-        echo '<p>' . esc_html__( 'Only release ZIPs published through the tested release workflow are offered. Unreleased branches and source archives are not installation packages. Test releases on a staging website before wider rollout.', 'grid-editorial-tools' ) . '</p>';
-        echo '<p>' . esc_html__( 'The updater contacts GitHub to read release information and download packages. It sends no visitor reading preferences or page content.', 'grid-editorial-tools' ) . '</p>';
-        echo '<p><a class="button button-primary" href="' . esc_url( admin_url( 'plugins.php' ) ) . '">' . esc_html__( 'Open Installed Plugins', 'grid-editorial-tools' ) . '</a> <a class="button" href="' . esc_url( self::REPOSITORY . 'releases' ) . '">' . esc_html__( 'View releases', 'grid-editorial-tools' ) . '</a></p></div>';
-    }
 }

@@ -3,7 +3,7 @@ Contributors: grid-arendal
 Requires at least: 6.4
 Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 
 Independent editorial tools for GRID-Arendal websites. No accessibility widget dependency.
@@ -15,6 +15,9 @@ Optional front-end workspace, ACF groups and names, native permission checks, re
 Upload and activate this ZIP. On an existing combined 2.x installation, install this plugin first; it waits safely until the combined plugin is replaced with the standalone widget 3.x. Then verify the existing workspace, roles and fields. Deactivating either split plugin leaves the other running and never deletes data.
 
 == Changelog ==
+= 1.0.1 =
+* Remove the custom Plugin updates settings page. Update checks and installation remain available through WordPress Plugins and Updates.
+
 = 1.0.0 =
 * Extract editorial tools into their own plugin with independent settings, admin menu, runtime, version and update feed.
 * Preserve existing workspace pages, ACF keys/values, label overrides, exclusions, review records and native permissions.
