@@ -4,7 +4,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 
 final class GRID_A11Y_Plugin_Updates {
     const REPOSITORY = 'https://github.com/grid-arendal/grid-accessibility-toolbar/';
-    const METADATA_URL = 'https://raw.githubusercontent.com/grid-arendal/grid-accessibility-toolbar/main/updates.json';
+    const METADATA_URL = 'https://raw.githubusercontent.com/grid-arendal/grid-accessibility-toolbar/main/widget-updates.json';
     const SLUG = 'grid-accessibility-toolbar';
     private static $plugin_file;
     private static $checker;
@@ -44,7 +44,7 @@ final class GRID_A11Y_Plugin_Updates {
 
     public static function admin_page() {
         if ( ! current_user_can( 'manage_options' ) ) return;
-        echo '<div class="wrap"><h1>' . esc_html__( 'GRID-Arendal plugin updates', 'grid-accessibility-toolbar' ) . '</h1>';
+        echo '<div class="wrap"><h1>' . esc_html__( 'GRID Accessibility Widget updates', 'grid-accessibility-toolbar' ) . '</h1>';
         echo '<p>' . esc_html__( 'Updates come from published stable releases in GRID-Arendal’s public GitHub repository. No GitHub account, access token or website registration is needed.', 'grid-accessibility-toolbar' ) . '</p>';
         echo '<div class="notice notice-info inline"><p>' . esc_html( self::enabled() ? __( 'Release update checks are enabled. Use Check for updates on the Installed Plugins screen. WordPress checks periodically; automatic installation remains your choice.', 'grid-accessibility-toolbar' ) : __( 'Update checks are disabled by the server’s GRID_A11Y_ENABLE_UPDATES setting. The widget still works normally.', 'grid-accessibility-toolbar' ) ) . '</p></div>';
         echo '<p>' . esc_html__( 'Only release ZIPs published through the tested release workflow are offered. Unreleased branches and source archives are not installation packages. Test releases on a staging website before wider rollout.', 'grid-accessibility-toolbar' ) . '</p>';

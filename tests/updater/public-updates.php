@@ -2,11 +2,12 @@
 // Credential-free update policy tests, without network access.
 error_reporting(E_ALL);set_error_handler(function($level,$message){throw new Exception($message);});
 define('ABSPATH',__DIR__.'/');function add_action(){}function add_filter(){} function is_wp_error($value){return $value instanceof Exception;}
-require dirname(__DIR__,2).'/includes/class-grid-plugin-updates.php';
-require dirname(__DIR__,2).'/vendor/plugin-update-checker/plugin-update-checker.php';
+$root=file_exists(dirname(__DIR__,2).'/grid-accessibility-toolbar')?dirname(__DIR__,2).'/grid-accessibility-toolbar':dirname(__DIR__,2);
+require $root.'/includes/class-grid-plugin-updates.php';
+require $root.'/vendor/plugin-update-checker/plugin-update-checker.php';
 $count=0;function ok($label,$value){global $count;if(!$value)throw new Exception('FAIL '.$label);$count++;echo 'PASS '.$label."\n";}
 ok('Enabled without any credential',GRID_A11Y_Plugin_Updates::enabled());
-ok('Metadata uses public CDN rather than API',GRID_A11Y_Plugin_Updates::METADATA_URL==='https://raw.githubusercontent.com/grid-arendal/grid-accessibility-toolbar/main/updates.json');
+ok('Metadata uses public CDN rather than API',GRID_A11Y_Plugin_Updates::METADATA_URL==='https://raw.githubusercontent.com/grid-arendal/grid-accessibility-toolbar/main/widget-updates.json');
 $version='1.11.0';$url='https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v1.11.0/grid-accessibility-toolbar-1.11.0.zip';
 $info=\YahnisElsts\PluginUpdateChecker\v6p0\Plugin\PluginInfo::fromJson(json_encode(['name'=>'GRID Accessibility Toolbar','slug'=>'grid-accessibility-toolbar','version'=>$version,'download_url'=>$url,'sections'=>['description'=>'Reading preferences']]));
 ok('Actual library metadata parser is compatible',is_object($info));ok('Matching published package accepted',GRID_A11Y_Plugin_Updates::valid_package($info)===$info);

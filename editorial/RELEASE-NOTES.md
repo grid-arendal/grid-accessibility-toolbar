@@ -1,0 +1,1 @@
+Independent GRID Editorial Tools plugin: ACF groups/labels, optional content workspace and account icon, review/imports/notifications, protected files, maps and LMS adapters. Retains existing editorial settings and field/content keys. Safe staging beside combined 2.x; standalone operation without the widget; independent admin menu, assets, version and update feed.

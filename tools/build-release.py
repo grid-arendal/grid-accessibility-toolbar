@@ -6,14 +6,18 @@ parser=argparse.ArgumentParser()
 parser.add_argument('--source',type=Path,default=Path(__file__).resolve().parents[1])
 parser.add_argument('--output',type=Path,default=Path('dist'))
 parser.add_argument('--version',required=True)
+parser.add_argument('--product',choices=['widget','editorial'],default='widget')
 a=parser.parse_args();root=a.source.resolve();version=a.version
 if not re.fullmatch(r'\d+\.\d+\.\d+',version):raise SystemExit('A stable x.y.z version is required')
-main=(root/'grid-accessibility-toolbar.php').read_text()
+slug='grid-accessibility-toolbar' if a.product=='widget' else 'grid-editorial-tools'
+name='GRID Accessibility Widget' if a.product=='widget' else 'GRID Editorial Tools'
+tag_prefix='v' if a.product=='widget' else 'editorial-v'
+main=(root/(slug+'.php')).read_text()
 for pattern in [r'\* Version:\s*([\d.]+)',r"const VERSION = '([\d.]+)'"]:
  match=re.search(pattern,main)
  if not match or match.group(1)!=version:raise SystemExit('Plugin version does not match release version')
 if not re.search(r'^Stable tag:\s*'+re.escape(version)+r'\s*$',(root/'readme.txt').read_text(),re.M):raise SystemExit('Readme stable tag does not match release')
-allowed=['grid-accessibility-toolbar.php','readme.txt','LICENSE.txt','THIRD-PARTY-NOTICES.txt','assets','includes','vendor']
+allowed=[slug+'.php','readme.txt','LICENSE.txt','THIRD-PARTY-NOTICES.txt','assets','includes','vendor']
 files=[]
 for name in allowed:
  p=root/name
@@ -24,13 +28,13 @@ for p in files:
  if p.is_symlink() or any(x.startswith('.') for x in rel.parts):raise SystemExit('Unexpected runtime path: '+str(rel))
  b=p.read_bytes()
  if re.search(rb'github_pat_[A-Za-z0-9_]{20,}|gh[pousr]_[A-Za-z0-9]{20,}|-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----',b):raise SystemExit('Potential secret in: '+str(rel))
-a.output.mkdir(parents=True,exist_ok=True);target=a.output/('grid-accessibility-toolbar-'+version+'.zip')
+a.output.mkdir(parents=True,exist_ok=True);target=a.output/(slug+'-'+version+'.zip')
 with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED,compresslevel=9) as z:
- for p in files:z.write(p,'grid-accessibility-toolbar/'+str(p.relative_to(root)))
+ for p in files:z.write(p,slug+'/'+str(p.relative_to(root)))
 with zipfile.ZipFile(target) as z:
  assert z.testzip() is None
  assert len(z.namelist())==len(files)
- for p in files:assert z.read('grid-accessibility-toolbar/'+str(p.relative_to(root)))==p.read_bytes()
+ for p in files:assert z.read(slug+'/'+str(p.relative_to(root)))==p.read_bytes()
 digest=hashlib.sha256(target.read_bytes()).hexdigest()
 (a.output/'SHA256SUMS.txt').write_text(digest+'  '+target.name+'\n')
 print(target.name, 'files='+str(len(files)), 'sha256='+digest)
@@ -38,5 +42,5 @@ print(target.name, 'files='+str(len(files)), 'sha256='+digest)
 minimum_wp=re.search(r'\* Requires at least:\s*([^\n]+)',main).group(1).strip()
 minimum_php=re.search(r'\* Requires PHP:\s*([^\n]+)',main).group(1).strip()
 notes=(root/'RELEASE-NOTES.md').read_text() if (root/'RELEASE-NOTES.md').exists() else 'Published stable plugin release.'
-metadata={'name':'GRID-Arendal','slug':'grid-accessibility-toolbar','version':version,'homepage':'https://github.com/grid-arendal/grid-accessibility-toolbar','author':'GRID-Arendal','author_homepage':'https://www.grida.no/','requires':minimum_wp,'requires_php':minimum_php,'download_url':'https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v'+version+'/'+target.name,'sha256':digest,'sections':{'description':'<p>GRID-Arendal accessibility and optional editorial tools. Configure modules per website; no automatic legacy-content migration or WCAG compliance claim.</p>','changelog':'<p>'+html.escape(notes).replace('\n','<br>')+'</p>'}}
+metadata={'name':name,'slug':slug,'version':version,'homepage':'https://github.com/grid-arendal/grid-accessibility-toolbar','author':'GRID-Arendal','author_homepage':'https://www.grida.no/','requires':minimum_wp,'requires_php':minimum_php,'download_url':'https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/'+tag_prefix+version+'/'+target.name,'sha256':digest,'sections':{'description':'<p>Independent GRID-Arendal '+a.product+' plugin. Configure and update this product separately.</p>','changelog':'<p>'+html.escape(notes).replace('\n','<br>')+'</p>'}}
 (a.output/'updates.json').write_text(json.dumps(metadata,indent=2)+'\n')

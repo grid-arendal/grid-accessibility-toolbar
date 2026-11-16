@@ -1,152 +1,29 @@
-=== GRID-Arendal ===
+=== GRID Accessibility Widget ===
 Contributors: grid-arendal
-Tags: accessibility, reading, toolbar
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 2.0.4
+Stable tag: 3.0.0
 License: GPLv2 or later
-License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Independent visitor reading preferences. Core controls run locally without an account or analytics; optional GTranslate integration uses external translation services. No automated compliance claims.
+GRID-Arendal visitor reading preferences and optional GTranslate integration.
 
 == Description ==
+Accessible, keyboard-operable preference panel with text sizing, spacing, readable/OpenDyslexic fonts, contrast, highlighted links, reduced motion, reading aids, image hiding, page structure and transparent preference profiles. Stores optional visitor preferences locally; includes GRID-Arendal flower branding and an optional embedded GTranslate language selector. Core controls work without third-party services.
 
-Seventeen optional preferences, shown in fourteen compact control tiles: text size (100/115/130/150%), text spacing, Arial/Helvetica readable font, locally hosted OpenDyslexic (Dyslexia Friendly), dark/light contrast, highlighted links, reduced CSS motion, large pointer, a reading guide, an adjustable reading mask, independent line height, text alignment, media saturation, image hiding, author-text tooltips, a page outline and stronger focus indicators.
+This plugin is independent of GRID Editorial Tools. It does not create ACF groups, editors, login icons, review queues, imports, maps or LMS connections. Install Editorial Tools separately for those features. GTranslate is separately installed for translation; it is not bundled.
 
-Keyboard-operable disclosure with a labelled nonmodal dialog, Escape dismissal, focus return, native selects, pressed-state buttons and polite status messages. The panel uses Shadow DOM to isolate its styling from themes and page preferences.
-
-Administrators can enable or disable the toolbar, choose controls, set the launcher side, bottom offset and color, edit the panel title and launcher label, link an accessibility statement, exclude page paths and disable preference storage.
-
-Works on public pages that call standard WordPress wp_head/wp_footer hooks. Hidden in WordPress administration, previews, feeds, embeds, Customizer and detected front-end editing sessions. Beaver Builder public layouts are supported without changing saved layouts. Beaver Builder's editor is deliberately excluded.
-
-This is original code, independent of UserWay. It does not reproduce UserWay services, remediate underlying markup, supply a screen reader or generate alternative text or certify WCAG/legal compliance. A toolbar cannot replace accessible design, content remediation and manual testing.
+Preferences do not repair inaccessible templates/content or certify WCAG compliance. Reduced motion cannot pause every embedded/canvas/script animation. Fonts/profiles are optional reading preferences, not treatment or safety guarantees. Browser zoom and assistive technology remain available. Beaver Builder and detected layout editors are excluded.
 
 == Installation ==
+Upload the release ZIP and activate. Open GRID Accessibility → Accessibility Widget. Configure controls, branding, translation and excluded paths. Clear site caches after changes.
 
-1. In WordPress, choose Plugins > Add New Plugin > Upload Plugin.
-2. Upload grid-accessibility-toolbar-2.0.2.zip and click Install Now.
-3. Activate GRID Accessibility Toolbar.
-4. Open GRID-Arendal > Accessibility Widget and save your preferred options.
-5. Clear site/CDN caches and test a public page while signed out.
+Existing combined 2.x sites: install and activate GRID Editorial Tools first, then use Replace current with uploaded for this ZIP. The installed folder stays grid-accessibility-toolbar. Widget settings, visitor preference keys and asset URLs are retained; editorial settings/content remain owned by Editorial Tools. Deactivation never deletes data. See INTEGRATION-PLAN.md in the source repository for the rollout/rollback checklist.
 
-No signup or API key is required. Repeat on each site. Multisite network activation is supported with per-site settings and lazy defaults for new sites; there is no shared network settings screen.
-
-== Release updates ==
-
-Updates use the public grid-arendal/grid-accessibility-toolbar GitHub release channel. No website account, access token or registration is needed. A release feed is published only after the tested stable ZIP is available. Branch/source archives and mismatched release URLs are rejected. Check under GRID-Arendal > Plugin updates. WordPress checks periodically; automatic installation remains opt-in. Set GRID_A11Y_ENABLE_UPDATES to false on the server to disable checks.
-
-== Privacy ==
-
-With remembering enabled, the plugin stores only preference values in localStorage under a site-specific grid-a11y-v1-* key. The core reading controls use no cookies, telemetry, third-party font services or external runtime requests. When GTranslate is installed and its selector is enabled, GTranslate loads its external widget and translation engine and sends page text to its translation service when used. GTranslate can remember a visitor-selected language separately from these reading preferences. Reset preferences removes the key. Disabling remembering removes the key on the next eligible page visit. Storage restrictions are handled gracefully. Release checks contact GitHub server-to-server for public update metadata and packages. The updater sends no visitor page content or reading preferences and uses no GitHub credential. Other site plugins may collect data independently.
-
-== Limitations ==
-
-Modern browsers with Shadow DOM, CSS custom properties and :where/:not support are required. Internet Explorer is not supported. JavaScript is required; without it, the original page remains available and the launcher stays absent.
-
-Page preferences can change layout and may expose theme overflow problems. Contrast modes replace CSS background images, including meaningful ones; they are optional presentation modes, not a contrast audit. Readable font uses Arial/Helvetica; Dyslexia Friendly uses OpenDyslexic, with regular, bold, italic and bold-italic styles. These are optional preferences, not a treatment or a guaranteed benefit for every reader. The combined Font style control cycles OpenDyslexic, Arial and Site default; text size and spacing remain independent. CSS motion reduction also pauses native HTML video while enabled. It does not universally pause GIFs, canvas, JavaScript-driven animations or embedded third-party media, and it does not force video to resume when disabled. Pointer customization depends on browser/device support. The reading guide follows a mouse/pen and is decorative; on touch it stays at mid-screen. Text scaling does not change iframe/canvas/SVG text, code, known icon fonts, editable regions or explicit opt-outs.
-
-Theme-specific testing and manual keyboard/screen-reader checks remain necessary. The plugin does not make underlying menus, PDFs, forms, captions or content accessible.
-
-== Uninstall and rollback ==
-
-Deactivate to remove the toolbar and its page effects on the next load. Clear caches. Delete the plugin through WordPress if no longer needed. Administrator settings are deliberately retained in the grid_a11y_settings option for reinstall; browser preferences are retained until Reset or clearing site data. Removing this plugin does not rewrite posts, builder layouts, media or theme files.
-
-== Preference profiles ==
-
-Eight transparent presets: Motor Impaired, Blind, Color Blind, Dyslexia, Low vision, Cognitive & Learning, Seizure & Epileptic, and ADHD. Each explains its effects and limits. The Blind profile opens navigation aids; it does not replace a screen reader. The Seizure & Epileptic profile is a reduced-motion preference, not a seizure-safety guarantee. Only concrete preferences are saved, not the selected profile label. Profiles respect site-disabled controls.
-
-== Bundled fonts ==
-
-OpenDyslexic is by Abbie Gonzalez. The unmodified font binaries are distributed under SIL OFL 1.1; see assets/fonts/OFL.txt and THIRD-PARTY-NOTICES.txt. OpenDyslexic is fetched from your own site only when selected. The interface uses locally hosted Geologica Regular and SemiBold, also under SIL OFL 1.1; see assets/fonts/Geologica-OFL.txt.
+== Updates ==
+Standalone releases use widget-updates.json and v3.x.x release assets. The legacy combined updates.json feed remains frozen at 2.0.4 to prevent destructive automatic migrations. No per-site GitHub credentials are needed. WordPress automatic installation remains the administrator's choice.
 
 == Changelog ==
-
-= 2.0.4 =
-* Automatically add an accessible account icon to the main menu when the front-end workspace is enabled. Visitors sign in with a return link; authorised editors open the workspace directly.
-* Reuse existing workspace links, offer a menu selector and opt-out, and create a private workspace with starter Page/Article sections on first enable if needed.
-
-
-= 2.0.3 =
-* Keep hidden table accessibility labels within the workspace scroll region to prevent page-wide phone overflow.
-
-
-= 2.0.2 =
-* Automatically create editable, database-backed starter ACF groups without overwriting owner changes.
-* Add Field groups to the GRID-Arendal menu.
-* Restrict workspace menu links to authorised signed-in editors, including child links.
-* Support excluded system pages and protect the workspace from editing itself.
-
-= 2.0.1 =
-* Keep the accessibility launcher clear of sticky save controls on phone editing screens.
-
-= 2.0.0 =
-* Consolidate shared GRID editorial tools as opt-in modules alongside accessibility.
-* Configure ACF group/field and content-type display names without changing data keys or URLs.
-* Add a permission-based frontend workspace, review and activity, CSV draft import, private files, coordinate editing and LearnPress course connections.
-* Editorial modules are off by default; no roles, existing plugins or content are automatically migrated.
-
-= 1.11.2 =
-* Restyle the language reset as a discreet text control, retaining visible keyboard focus and generous touch targets.
-
-= 1.11.1 =
-* Add a keyboard- and touch-accessible Reset beside Website language to restore the original language through GTranslate.
-* Constrain the GRID-Arendal administration menu flower to the standard 20px icon size.
-
-= 1.11.0 =
-* Public release updates work without any per-website GitHub credential.
-* Release workflow publishes update metadata only after the stable ZIP exists.
-* Native WordPress update notices and optional automatic installation.
-
-= 1.10.0 =
-* Optional private GitHub release updates through the native WordPress update interface.
-* Server-held read-only credentials; stable release assets only, with no branch/source-archive fallback.
-* New GRID-Arendal > Plugin updates setup/status page.
-
-= 1.9.0 =
-* Dedicated GRID-Arendal administration menu with the official flower icon and Accessibility Widget submenu.
-* Previous settings-page bookmarks redirect to the new menu.
-
-= 1.8.1 =
-* Touch-only devices omit cursor, reading mask/guide and hover tooltips. Profiles and saved settings cannot activate these hidden controls.
-* Detection uses input capabilities rather than screen width; desktop and mouse-equipped hybrids retain controls.
-
-= 1.8.0 =
-* Compact official flower icon with a linked GRID-Arendal credit.
-* Administrator dependency prompts offer GTranslate installation or activation when translation is enabled. Core controls remain independent.
-
-= 1.7.0 =
-* Reading aids cycles through large cursor, adjustable reading mask, reading guide and Off.
-* Mask height and dimming are adjustable; pointer/touch and keyboard focus tracking preserve page interaction.
-
-= 1.6.0 =
-* Combined font control cycles through OpenDyslexic, Arial and the site default.
-* GRID-Arendal 2025 lavender identity, official logo and locally hosted Geologica interface fonts.
-
-= 1.4.1 =
-* Automatically suppresses duplicate GTranslate/Google Language Translator floating controls where the embedded selector is available. Original settings are preserved for deactivation.
-
-= 1.4.0 =
-* Added optional official GTranslate dropdown inside the accessibility panel using a light-DOM slot.
-* Included loading/failure feedback, accessible labeling and an administrator integration switch.
-* GTranslate remains a separately installed plugin and provides page translation; toolbar labels follow the site interface language.
-
-= 1.3.0 =
-* Added seven local controls and eight transparent, reversible profiles.
-* Profiles apply only site-enabled preferences and do not store a disability label.
-* Reduced motion also pauses native HTML video; embedded and script motion may remain.
-
-= 1.2.0 =
-* Added Dyslexia Friendly with four locally hosted OpenDyslexic font styles and their license.
-* Preserved saved settings and added a persistent administrator opt-out.
-* Font controls switch independently of text size and spacing.
-
-= 1.1.0 =
-* Original SVG icons, circular launcher, branded header and responsive control tiles.
-* Clear on/off indicators and expandable preference information.
-
-= 1.0.0 =
-* Initial independent toolbar, site settings, local preferences and editor safeguards.
-
-== Optional editorial tools ==
-
-GRID-Arendal → Modules & workspace provides a permission-based ACF content workspace, editorial review, CSV draft imports, explicit reviewer notifications, private files, coordinate editing and LearnPress course connections. New editorial modules default off. Section & field names changes display labels without changing saved keys or URL slugs. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins. Configure and test a section before migrating its existing editor. Specialised legacy workflows and data are not automatically converted.
+= 3.0.0 =
+* Split visitor accessibility into its own runtime, settings/admin surface and independent release/update channel.
+* Preserve existing widget settings, visitor preference keys and installed directory.
+* Remove editorial PHP, scripts, styles and Leaflet from this ZIP; add migration guidance when retained editorial settings need Editorial Tools.

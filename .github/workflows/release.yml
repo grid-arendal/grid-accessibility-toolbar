@@ -1,53 +1,67 @@
-name: Publish tested plugin release
+name: Publish independent GRID plugin release
 on:
   create:
   workflow_dispatch:
     inputs:
-      version:
-        description: Stable plugin version (must match source headers and readme)
+      product:
+        type: choice
+        options: [widget, editorial]
         required: true
-        default: '2.0.4'
+      version:
+        description: Stable version matching the selected plugin
+        required: true
 permissions:
   contents: write
 concurrency:
-  group: grid-stable-release
+  group: grid-independent-stable-releases
   cancel-in-progress: false
 jobs:
   release:
-    if: github.event_name == 'workflow_dispatch' || (github.event.ref_type == 'branch' && startsWith(github.event.ref, 'release/'))
+    if: github.event_name == 'workflow_dispatch' || (github.event.ref_type == 'branch' && (startsWith(github.event.ref, 'release/widget/') || startsWith(github.event.ref, 'release/editorial/')))
     runs-on: ubuntu-latest
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v6
-      - name: Resolve explicitly requested release version
+      - name: Resolve product and version
         env:
-          MANUAL_VERSION: ${{ inputs.version }}
+          PRODUCT_INPUT: ${{ inputs.product }}
+          VERSION_INPUT: ${{ inputs.version }}
           RELEASE_REF: ${{ github.event.ref }}
           EVENT_NAME: ${{ github.event_name }}
         run: |
           if [ "$EVENT_NAME" = "workflow_dispatch" ]; then
-            version="$MANUAL_VERSION"
+            product="$PRODUCT_INPUT"; version="$VERSION_INPUT"
           else
-            version="${RELEASE_REF#release/}"
+            value="${RELEASE_REF#release/}"; product="${value%%/*}"; version="${value#*/}"
           fi
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then exit 1; fi
+          if [ "$product" = "widget" ]; then
+            source="."; slug="grid-accessibility-toolbar"; tag="v$version"
+          elif [ "$product" = "editorial" ]; then
+            source="editorial"; slug="grid-editorial-tools"; tag="editorial-v$version"
+          else exit 1; fi
+          echo "PRODUCT=$product" >> "$GITHUB_ENV"
           echo "RELEASE_VERSION=$version" >> "$GITHUB_ENV"
-      - name: Validate PHP syntax and update policy
+          echo "SOURCE=$source" >> "$GITHUB_ENV"
+          echo "SLUG=$slug" >> "$GITHUB_ENV"
+          echo "TAG=$tag" >> "$GITHUB_ENV"
+      - name: Validate isolation, migration and syntax
         run: |
           find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
           php tests/php-unit.php
           php tests/modules.php
-          node --check assets/toolbar.js
-          node --check assets/workspace.js
+          php tests/split.php
+          php tests/legacy-split.php
           php tests/updater/public-updates.php
-      - name: Build and validate installable ZIP
-        run: python3 tools/build-release.py --source . --output dist --version "$RELEASE_VERSION"
+          php tests/updater/editorial-updates.php
+          node --check assets/toolbar.js
+          node --check editorial/assets/workspace.js
+      - name: Build selected plugin only
+        run: python3 tools/build-release.py --source "$SOURCE" --output dist --version "$RELEASE_VERSION" --product "$PRODUCT"
       - name: Publish stable release
         run: |
-          gh release create "v${RELEASE_VERSION}" \
-            "dist/grid-accessibility-toolbar-${RELEASE_VERSION}.zip" dist/SHA256SUMS.txt \
-            --target "$GITHUB_SHA" --title "GRID Accessibility Toolbar ${RELEASE_VERSION}" \
-            --notes-file RELEASE-NOTES.md
-      - name: Publish update feed after successful release
-        run: python3 tools/publish-metadata.py
+          gh release create "$TAG" "dist/$SLUG-$RELEASE_VERSION.zip" dist/SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --title "$SLUG $RELEASE_VERSION" --notes-file "$SOURCE/RELEASE-NOTES.md"
+      - name: Publish independent update feed
+        run: python3 tools/publish-metadata.py --product "$PRODUCT"

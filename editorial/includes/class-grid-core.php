@@ -6,7 +6,7 @@ final class GRID_Arendal_Core {
     const LABELS = 'grid_arendal_labels';
     public static function catalog() {
         return array(
-            'accessibility' => array( 'Accessibility Widget', 'Visitor reading controls, profiles and the GTranslate integration.', array() ),
+
             'labels' => array( 'Section and field names', 'Rename ACF groups, tabs, fields and content-type display labels without changing stored keys or URLs.', array( 'acf' ) ),
             'workspace' => array( 'Front-end content workspace', 'Permission-based content lists, search, sorting, pagination, ACF editing and contextual edit links.', array( 'acf' ) ),
             'review' => array( 'Editorial review and activity', 'Submit changes for review, preserve published content until approval, reject stale edits and record activity.', array( 'workspace' ) ),
@@ -19,7 +19,7 @@ final class GRID_Arendal_Core {
     }
     public static function settings() {
         $s = get_option( self::OPTION, array() );
-        return array_merge( array( 'modules' => array( 'accessibility', 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'workspace_menu' => 0, 'excluded_pages' => array(), 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
+        return array_merge( array( 'modules' => array( 'labels' ), 'sections' => array(), 'workspace_page' => 0, 'workspace_menu' => 0, 'excluded_pages' => array(), 'reviewers' => array(), 'private_root' => '' ), is_array( $s ) ? $s : array() );
     }
     public static function enabled( $key ) { return in_array( $key, (array) self::settings()['modules'], true ); }
     public static function ready( $key, $seen = array() ) {
@@ -36,7 +36,7 @@ final class GRID_Arendal_Core {
     public static function boot() {
         add_action( 'admin_init', array( __CLASS__, 'register' ) );
         add_action( 'admin_menu', array( __CLASS__, 'menus' ), 30 );
-        add_filter( 'grid_a11y_should_display', function( $show ) { return $show && GRID_Arendal_Core::enabled( 'accessibility' ); } );
+
         require_once __DIR__ . '/modules/class-grid-labels.php';
         GRID_Arendal_Labels::boot();
         require_once __DIR__ . '/class-grid-fields.php';
@@ -107,13 +107,15 @@ final class GRID_Arendal_Core {
         register_setting( 'grid_arendal_labels', self::LABELS, array( 'type' => 'array', 'sanitize_callback' => array( 'GRID_Arendal_Labels', 'sanitize' ) ) );
     }
     public static function menus() {
-        add_submenu_page( 'grid-arendal', 'Modules and workspace', 'Modules & workspace', 'manage_options', 'grid-modules', array( __CLASS__, 'page' ) );
-        add_submenu_page( 'grid-arendal', 'Section and field names', 'Section & field names', 'manage_options', 'grid-labels', array( 'GRID_Arendal_Labels', 'page' ) );
+        add_menu_page( 'GRID Editorial Tools', 'GRID Editorial', 'manage_options', 'grid-editorial-tools', array( __CLASS__, 'page' ), plugins_url( '../assets/branding/grid-flower.svg', __FILE__ ), 82 );
+        add_submenu_page( 'grid-editorial-tools', 'GRID Editorial Tools', 'Overview', 'manage_options', 'grid-editorial-tools', array( __CLASS__, 'page' ) );
+        add_submenu_page( 'grid-editorial-tools', 'Modules and workspace', 'Modules & workspace', 'manage_options', 'grid-modules', array( __CLASS__, 'page' ) );
+        add_submenu_page( 'grid-editorial-tools', 'Section and field names', 'Section & field names', 'manage_options', 'grid-labels', array( 'GRID_Arendal_Labels', 'page' ) );
     }
     public static function page() {
         if ( ! current_user_can( 'manage_options' ) ) return;
         $s = self::settings(); $groups = function_exists( 'acf_get_field_groups' ) ? acf_get_field_groups() : array();
-        echo '<div class="wrap"><h1>GRID-Arendal modules</h1><p>Enable only the tools this website needs. Existing accessibility preferences remain in their own settings. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins.</p>';
+        echo '<div class="wrap"><h1>GRID Editorial Tools modules</h1><p>Enable only the tools this website needs. Visitor accessibility is provided by the separate GRID Accessibility Widget. ACF, Beaver Builder/Themer, WooCommerce and LearnPress remain separate plugins.</p>';
         settings_errors(); echo '<form action="options.php" method="post">'; settings_fields( 'grid_arendal_tools' );
         echo '<input type="hidden" name="' . esc_attr( self::OPTION ) . '[modules][]" value=""><table class="widefat striped"><thead><tr><th>Module</th><th>Purpose</th><th>Status</th></tr></thead><tbody>';
         foreach ( self::catalog() as $key => $m ) {
@@ -133,6 +135,6 @@ final class GRID_Arendal_Core {
         echo '<h3>Review notifications</h3><p>Recipients also need publishing permission for the submitted content type. No mail is sent unless the notifications module is enabled and reviewers are selected.</p>';
         foreach ( get_users( array( 'fields' => array( 'ID', 'display_name' ), 'orderby' => 'display_name' ) ) as $u ) echo '<label style="display:block"><input type="checkbox" name="' . esc_attr( self::OPTION ) . '[reviewers][]" value="' . esc_attr( $u->ID ) . '" ' . checked( in_array( (int) $u->ID, $s['reviewers'], true ), true, false ) . '> ' . esc_html( $u->display_name ) . '</label>';
         echo '<h3>Private resource file storage</h3><p>For the private-file module, provide an existing writable directory outside the web root. Files are never added to the public media library.</p><input class="large-text" name="' . esc_attr( self::OPTION ) . '[private_root]" value="' . esc_attr( $s['private_root'] ) . '">';
-        submit_button(); echo '</form><h2>Dependencies</h2><p><a href="' . esc_url( admin_url( 'plugin-install.php?s=Advanced+Custom+Fields&tab=search&type=term' ) ) . '">Find ACF</a> · <a href="' . esc_url( admin_url( 'plugin-install.php?s=GTranslate&tab=search&type=term' ) ) . '">Find GTranslate</a> · <a href="' . esc_url( admin_url( 'plugin-install.php?s=LearnPress&tab=search&type=term' ) ) . '">Find LearnPress</a></p><p>These tools consolidate shared patterns from the CAMCA, BCK Hub and LMS editors. Project-specific permissions and existing data are retained; no legacy plugin or snippet is automatically deactivated. Test a configured section before switching an existing website to this workspace.</p></div>';
+        submit_button(); echo '</form><h2>Dependencies</h2><p><a href="' . esc_url( admin_url( 'plugin-install.php?s=Advanced+Custom+Fields&tab=search&type=term' ) ) . '">Find ACF</a> · <a href="' . esc_url( admin_url( 'plugin-install.php?s=LearnPress&tab=search&type=term' ) ) . '">Find LearnPress</a></p><p>These tools consolidate shared patterns from the CAMCA, BCK Hub and LMS editors. Project-specific permissions and existing data are retained; no legacy plugin or snippet is automatically deactivated. Test a configured section before switching an existing website to this workspace.</p></div>';
     }
 }

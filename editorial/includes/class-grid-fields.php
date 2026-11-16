@@ -73,7 +73,7 @@ final class GRID_Arendal_Fields {
         } catch ( Throwable $e ) { self::$issues[] = 'Starter groups could not be completed. Existing groups and content were retained. Open GRID-Arendal → Field groups to review the setup.'; }
         finally { $wpdb->get_var( $wpdb->prepare( 'SELECT RELEASE_LOCK(%s)', $lock ) ); }
     }
-    public static function menu() { add_submenu_page( 'grid-arendal', 'Editable field groups', 'Field groups', 'manage_options', 'grid-fields', array( __CLASS__, 'page' ) ); }
+    public static function menu() { add_submenu_page( 'grid-editorial-tools', 'Editable field groups', 'Field groups', 'manage_options', 'grid-fields', array( __CLASS__, 'page' ) ); }
     public static function notices() {
         if ( ! current_user_can( 'manage_options' ) ) return;
         foreach ( self::$issues as $issue ) echo '<div class="notice notice-warning"><p>' . esc_html( $issue ) . '</p></div>';

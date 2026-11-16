@@ -113,7 +113,7 @@ final class GRID_Arendal_Workspace {
         return $html . '<li class="menu-item grid-workspace-icon"><a href="' . esc_url( $url ) . '" aria-label="' . esc_attr( $label ) . '" title="' . esc_attr( $label ) . '">' . self::navigation_icon( $label ) . '</a></li>';
     }
     public static function navigation_assets() {
-        if ( self::navigation_ready() && -1 !== (int) GRID_Arendal_Core::settings()['workspace_menu'] ) wp_enqueue_style( 'grid-workspace-navigation', plugins_url( '../../assets/workspace-navigation.css', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION );
+        if ( self::navigation_ready() && -1 !== (int) GRID_Arendal_Core::settings()['workspace_menu'] ) wp_enqueue_style( 'grid-workspace-navigation', plugins_url( '../../assets/workspace-navigation.css', __FILE__ ), array(), GRID_Editorial_Tools::VERSION );
     }
     public static function can_review( $id ) {
         $p = get_post( $id ); $o = $p ? get_post_type_object( $p->post_type ) : null;
@@ -126,14 +126,14 @@ final class GRID_Arendal_Workspace {
         do_action( 'litespeed_control_set_nocache', 'GRID-Arendal editing workspace' );
     }
     public static function prepare() {
-        if ( GRID_Accessibility_Toolbar::editor_active() ) return;
+        if ( GRID_Editorial_Tools::editor_active() ) return;
         if ( self::can_access() || ( self::page() && self::matches_url( $_SERVER['REQUEST_URI'] ?? '' ) ) ) self::private_headers();
         if ( ! self::page() || ! is_page( self::page() ) ) return;
         self::private_headers();
         add_filter( 'body_class', function( $classes ) { $classes[] = 'grid-workspace-screen'; return $classes; } );
-        wp_enqueue_style( 'grid-workspace', plugins_url( '../../assets/workspace.css', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION );
+        wp_enqueue_style( 'grid-workspace', plugins_url( '../../assets/workspace.css', __FILE__ ), array(), GRID_Editorial_Tools::VERSION );
         if ( is_user_logged_in() ) { acf_enqueue_scripts(); wp_enqueue_media(); }
-        wp_enqueue_script( 'grid-workspace', plugins_url( '../../assets/workspace.js', __FILE__ ), array(), GRID_Accessibility_Toolbar::VERSION, true );
+        wp_enqueue_script( 'grid-workspace', plugins_url( '../../assets/workspace.js', __FILE__ ), array(), GRID_Editorial_Tools::VERSION, true );
         if ( GRID_Arendal_Core::ready( 'maps' ) ) GRID_Arendal_Editor_Extras::map_assets();
     }
     public static function fields( $type ) {
@@ -152,7 +152,7 @@ final class GRID_Arendal_Workspace {
     public static function version( $id ) { return hash( 'sha256', self::base_version( $id ) . wp_json_encode( get_post_meta( $id, self::PENDING, true ) ) ); }
     public static function input( $key, $default = '' ) { return isset( $_GET[$key] ) && is_scalar( $_GET[$key] ) ? sanitize_text_field( wp_unslash( $_GET[$key] ) ) : $default; }
     public static function screen() {
-        if ( GRID_Accessibility_Toolbar::editor_active() ) return '<p>The private GRID-Arendal workspace appears here when you leave the layout editor.</p>';
+        if ( GRID_Editorial_Tools::editor_active() ) return '<p>The private GRID-Arendal workspace appears here when you leave the layout editor.</p>';
         if ( ! self::page() || get_queried_object_id() !== self::page() ) return current_user_can( 'manage_options' ) ? '<p>Select this page under GRID-Arendal → Modules &amp; workspace before using the editor.</p>' : '';
         if ( ! is_user_logged_in() ) return '<section class="grid-workspace"><h2>Content workspace</h2><p>Please <a href="' . esc_url( wp_login_url( self::url() ) ) . '">sign in</a> with an authorised account.</p></section>';
         if ( ! self::can_access() ) return '<p>This workspace is not available to this account.</p>';
@@ -428,7 +428,7 @@ final class GRID_Arendal_Workspace {
         wp_safe_redirect( self::url( array( 'grid_section' => $type, 'grid_notice' => $notice ) ) ); exit;
     }
     public static function edit_link( $content ) {
-        if ( GRID_Accessibility_Toolbar::editor_active() || ! is_singular() || ! in_the_loop() || ! is_main_query() || ! self::page() || ! self::can_edit( get_the_ID() ) ) return $content;
+        if ( GRID_Editorial_Tools::editor_active() || ! is_singular() || ! in_the_loop() || ! is_main_query() || ! self::page() || ! self::can_edit( get_the_ID() ) ) return $content;
         // Personalised links must not enter any public page cache.
         if ( ! defined( 'DONOTCACHEPAGE' ) ) define( 'DONOTCACHEPAGE', true );
         do_action( 'litespeed_control_set_nocache', 'GRID editor shortcut' );

@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: GRID-Arendal
- * Description: Configurable GRID-Arendal tools: accessibility, ACF section names, front-end editing, review, resource imports, private files, maps and LMS connections.
- * Version: 2.0.4
+ * Plugin Name: GRID Accessibility Widget
+ * Description: GRID-Arendal visitor accessibility preferences, profiles and optional GTranslate integration. Independent of GRID Editorial Tools.
+ * Version: 3.0.0
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '2.0.4';
+    const VERSION = '3.0.0';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
@@ -84,7 +84,12 @@ final class GRID_Accessibility_Toolbar {
             if ( $version < 4 ) $additions[] = 'mask';
             $stored['tools'] = array_values( array_unique( array_merge( $stored['tools'], $additions ) ) );
         }
-        return array_merge( self::defaults(), is_array( $stored ) ? $stored : array() );
+        $settings = array_merge( self::defaults(), is_array( $stored ) ? $stored : array() );
+        if ( ! get_option( 'grid_a11y_split_migrated', false ) && 'native' !== get_option( 'grid_editorial_origin', false ) ) {
+            $legacy = get_option( 'grid_arendal_tools', false );
+            if ( is_array( $legacy ) && isset( $legacy['modules'] ) && ! in_array( 'accessibility', (array) $legacy['modules'], true ) ) $settings['enabled'] = 0;
+        }
+        return $settings;
     }
 
     public static function sanitize( $input ) {
@@ -317,8 +322,8 @@ final class GRID_Accessibility_Toolbar {
     }
 
     public static function admin_menu() {
-        add_menu_page( __( 'GRID-Arendal', 'grid-accessibility-toolbar' ), __( 'GRID-Arendal', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-arendal', array( __CLASS__, 'admin_overview' ), plugins_url( 'assets/branding/grid-flower.svg', __FILE__ ), 81 );
-        add_submenu_page( 'grid-arendal', __( 'GRID-Arendal', 'grid-accessibility-toolbar' ), __( 'Overview', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-arendal', array( __CLASS__, 'admin_overview' ) );
+        add_menu_page( __( 'GRID Accessibility', 'grid-accessibility-toolbar' ), __( 'GRID Accessibility', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-arendal', array( __CLASS__, 'admin_overview' ), plugins_url( 'assets/branding/grid-flower.svg', __FILE__ ), 81 );
+        add_submenu_page( 'grid-arendal', __( 'GRID Accessibility', 'grid-accessibility-toolbar' ), __( 'Overview', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-arendal', array( __CLASS__, 'admin_overview' ) );
         add_submenu_page( 'grid-arendal', __( 'Accessibility Widget', 'grid-accessibility-toolbar' ), __( 'Accessibility Widget', 'grid-accessibility-toolbar' ), 'manage_options', 'grid-a11y', array( __CLASS__, 'admin_page' ) );
     }
 
@@ -328,10 +333,21 @@ final class GRID_Accessibility_Toolbar {
 
     public static function admin_overview() {
         if ( ! current_user_can( 'manage_options' ) ) return;
-        echo '<div class="wrap"><h1>GRID-Arendal</h1><p>One configurable plugin for visitor accessibility and optional editorial tools.</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-modules' ) ) . '">Modules &amp; workspace</a> <a class="button" href="' . esc_url( admin_url( 'admin.php?page=grid-labels' ) ) . '">Section &amp; field names</a></p></div>';
-        echo '<div class="wrap"><h2>' . esc_html__( 'Accessibility Widget', 'grid-accessibility-toolbar' ) . '</h2><p>' . esc_html__( 'Help visitors choose how they read and navigate your website. Configure the widget controls, profiles, appearance and translation integration.', 'grid-accessibility-toolbar' ) . '</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-a11y' ) ) . '">' . esc_html__( 'Manage Accessibility Widget', 'grid-accessibility-toolbar' ) . '</a></p></div>';
+        echo '<div class="wrap"><h1>GRID Accessibility Widget</h1><p>Visitor reading preferences, profiles and optional translation. Editorial tools are now a separate plugin, developed and updated independently.</p><p><a class="button button-primary" href="' . esc_url( admin_url( 'admin.php?page=grid-a11y' ) ) . '">Widget settings</a></p></div>';
     }
-
+    public static function split_notice() {
+        if ( ! current_user_can( 'manage_options' ) || class_exists( 'GRID_Editorial_Tools', false ) ) return;
+        $legacy = get_option( 'grid_arendal_tools', array() );
+        if ( ! is_array( $legacy ) ) return;
+        $used = array_intersect( (array) ( $legacy['modules'] ?? array() ), array( 'workspace', 'review', 'csv', 'notifications', 'private_files', 'maps', 'lms' ) );
+        if ( $used || get_option( 'grid_arendal_labels', array() ) ) echo '<div class="notice notice-warning"><p><strong>Complete the GRID plugin split:</strong> this site has existing editorial settings. Install and activate GRID Editorial Tools to resume those features. Your settings, field groups and content have been retained. The Accessibility Widget does not run editorial modules.</p></div>';
+    }
+    public static function migrate_split() {
+        if ( ! current_user_can( 'manage_options' ) || get_option( 'grid_a11y_split_migrated', false ) ) return;
+        $settings = self::settings();
+        update_option( self::OPTION, $settings, false );
+        update_option( 'grid_a11y_split_migrated', true, false );
+    }
     public static function admin_page() {
         if ( ! current_user_can( 'manage_options' ) ) {
             return;
@@ -376,15 +392,15 @@ add_action( 'wp', array( 'GRID_Accessibility_Toolbar', 'suppress_translation_flo
 add_action( 'wp_print_footer_scripts', array( 'GRID_Accessibility_Toolbar', 'translation_script_order' ), 0 );
 add_action( 'wp_footer', array( 'GRID_Accessibility_Toolbar', 'render' ), 5 );
 add_action( 'admin_init', array( 'GRID_Accessibility_Toolbar', 'admin_init' ) );
+add_action( 'admin_init', array( 'GRID_Accessibility_Toolbar', 'migrate_split' ), 11 );
 add_action( 'init', array( 'GRID_Accessibility_Toolbar', 'redirect_legacy_settings' ), 20 );
 add_action( 'admin_notices', array( 'GRID_Accessibility_Toolbar', 'dependency_notice' ) );
+add_action( 'admin_notices', array( 'GRID_Accessibility_Toolbar', 'split_notice' ) );
 add_action( 'network_admin_notices', array( 'GRID_Accessibility_Toolbar', 'dependency_notice' ) );
 add_action( 'admin_menu', array( 'GRID_Accessibility_Toolbar', 'admin_menu' ) );
 add_action( 'admin_enqueue_scripts', array( 'GRID_Accessibility_Toolbar', 'admin_assets' ) );
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), array( 'GRID_Accessibility_Toolbar', 'action_links' ) );
 
-require_once __DIR__ . '/includes/class-grid-core.php';
-GRID_Arendal_Core::boot();
 
 require_once __DIR__ . '/includes/class-grid-plugin-updates.php';
 GRID_A11Y_Plugin_Updates::register( __FILE__ );

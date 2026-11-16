@@ -44,7 +44,7 @@ function esc_html( $text ) { return htmlspecialchars( $text, ENT_QUOTES ); }
 function esc_url( $url ) { return htmlspecialchars( $url, ENT_QUOTES ); }
 function dependency_output() { ob_start(); GRID_Accessibility_Toolbar::dependency_notice(); return ob_get_clean(); }
 
-require dirname(__DIR__) . '/grid-accessibility-toolbar.php';
+$widget_root=file_exists(__DIR__.'/../grid-accessibility-toolbar/grid-accessibility-toolbar.php')?__DIR__.'/../grid-accessibility-toolbar':dirname(__DIR__);require $widget_root.'/grid-accessibility-toolbar.php';
 $count = 0;
 function verify( $name, $condition ) {
     global $count;
@@ -159,4 +159,11 @@ $options[GRID_Accessibility_Toolbar::OPTION] = array( 'title' => 'My custom titl
 verify( 'Custom panel title is preserved', GRID_Accessibility_Toolbar::settings()['title'] === 'My custom title' );
 $options = array(); $installed_plugins = array(); $caps = array( 'manage_options' => true, 'install_plugins' => true ); $network_admin = true;
 verify( 'Network install uses the network administration destination', strpos( dependency_output(), '/network/update.php' ) !== false );
+function update_option($k,$v,$autoload=false){global$options;$options[$k]=$v;return true;}
+$options=array('grid_arendal_tools'=>array('modules'=>array('labels','workspace')));
+verify('Split preserves legacy disabled widget before first admin visit',GRID_Accessibility_Toolbar::settings()['enabled']===0);
+GRID_Accessibility_Toolbar::migrate_split();verify('Split records disabled widget without altering editorial settings',$options['grid_a11y_settings']['enabled']===0&&$options['grid_arendal_tools']['modules']===array('labels','workspace'));
+$options['grid_a11y_settings']['enabled']=1;verify('After migration widget no longer follows legacy module switches',GRID_Accessibility_Toolbar::settings()['enabled']===1);
+$options=array('grid_editorial_origin'=>'native','grid_arendal_tools'=>array('modules'=>array('labels')));verify('Installing widget after a native editorial site leaves widget enabled',GRID_Accessibility_Toolbar::settings()['enabled']===1);
+verify('Widget does not load editorial core',!class_exists('GRID_Arendal_Core',false));
 echo 'TOTAL ' . $count . "\n";

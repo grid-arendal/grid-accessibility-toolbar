@@ -1,0 +1,8 @@
+<?php
+error_reporting(E_ALL);set_error_handler(function($l,$m){throw new Exception($m);});define('ABSPATH','/');$options=array();$hooks=array();$n=0;
+function add_action($h,$f,$p=10){global$hooks;$hooks[$h][$p][]=$f;}function add_filter(){}function get_option($k,$d=false){global$options;return$options[$k]??$d;}function update_option($k,$v,$a=false){global$options;$options[$k]=$v;}function plugin_basename($p){return basename($p);}function verify($label,$v){global$n;if(!$v)throw new Exception($label);echo'PASS '.$label."\n";++$n;}
+$root=file_exists(__DIR__.'/../grid-editorial-tools')?__DIR__.'/../grid-editorial-tools':dirname(__DIR__).'/editorial';require $root.'/grid-editorial-tools.php';
+verify('Editorial main loads without widget',!class_exists('GRID_Accessibility_Toolbar',false));GRID_Editorial_Tools::boot();verify('Editorial core boots without widget',class_exists('GRID_Arendal_Core',false));verify('Native editorial install is marked separately from legacy migration',get_option('grid_editorial_origin')==='native');
+verify('Widget PHP not required by editorial code',strpos(file_get_contents($root.'/includes/modules/class-grid-workspace.php'),'GRID_Accessibility_Toolbar')===false);
+require $root.'/vendor/plugin-update-checker/plugin-update-checker.php';$widget=file_exists(__DIR__.'/../grid-accessibility-toolbar')?__DIR__.'/../grid-accessibility-toolbar':dirname(__DIR__);require $widget.'/vendor/plugin-update-checker/plugin-update-checker.php';verify('Independent bundled updater libraries coexist',class_exists('YahnisElsts\\PluginUpdateChecker\\v6p0\\PucFactory'));
+echo'TOTAL '.$n."\n";

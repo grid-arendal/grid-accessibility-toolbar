@@ -1,19 +1,14 @@
-# GRID-Arendal
+# GRID-Arendal WordPress plugins
 
-A reusable WordPress plugin combining visitor accessibility controls and configurable shared editorial tools. Install the **release ZIP**, not GitHub's source-code archive.
+Two independently installed and updated products share this source repository:
 
-Accessibility and empty section-label overrides default on. Front-end editing, review, CSV imports, notifications, private files, coordinate editing and LearnPress connections are optional. Existing data keys, URL slugs, user permissions and accessibility settings are preserved. Other plugins and project-specific workflows are not automatically migrated or disabled.
+| Product | Source | Version | Release ZIP |
+|---|---|---|---|
+| GRID Accessibility Widget | repository root | 3.0.0 | grid-accessibility-toolbar-3.0.0.zip |
+| GRID Editorial Tools | editorial/ | 1.0.0 | grid-editorial-tools-1.0.0.zip |
 
-When ACF is available, standard database-backed Page, Article, Resource and Team field groups are created for installed content types. Edit their fields through GRID-Arendal → Field groups; existing customisation and deliberate deletions are preserved. Workspace menu links follow native page and editorial permissions.
+Neither runtime depends on the other. Install either or both. Third-party WordPress dependencies remain separate.
 
-See [MODULES.md](MODULES.md) for module setup, dependencies and migration boundaries. ACF, Beaver Builder/Themer, GTranslate, WooCommerce and LearnPress remain separate plugins. No automated WCAG compliance claim is made.
+Read [INTEGRATION-PLAN.md](INTEGRATION-PLAN.md) before migrating an existing combined 2.x site. Install Editorial Tools first, then replace the combined plugin with the widget. Existing settings, field keys/values, workspace URLs and permissions are preserved. The legacy updates.json feed is frozen at 2.0.4; new products use widget-updates.json and editorial-updates.json.
 
-## Updates and releases
-
-Websites use the public update feed and published stable ZIPs without GitHub credentials. Updates appear in the normal WordPress update interface; automatic installation remains a site administrator's WordPress preference.
-
-Set the matching stable version in the main PHP header/constant and readme, update release notes, review the source and either dispatch the release workflow or create a deliberate `release/x.y.z` branch from the reviewed commit. CI validates PHP, JavaScript, configuration/input tests, updater policy and the installable ZIP. Update metadata is published only after the release asset exists.
-
-The directory remains `grid-accessibility-toolbar` for upgrade compatibility.
-
-The optional workspace now creates its private page and starter sections on first enable if needed, and automatically adds an accessible login/editor account icon to a main WordPress/Beaver Themer menu. Administrators can choose a menu or disable the icon. Native editorial permissions remain unchanged.
+Release a product explicitly using release/widget/x.y.z or release/editorial/x.y.z branches, or the product-selecting workflow. Install release ZIPs, not GitHub source archives. See each product's readme and release notes. No automated WCAG compliance claim is made.

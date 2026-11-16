@@ -1,0 +1,7 @@
+GRID Editorial Tools third-party components
+
+Leaflet 1.9.4 — BSD-2-Clause; see assets/leaflet/LICENSE.txt.
+Geologica Regular/SemiBold — SIL Open Font License 1.1; see assets/fonts/Geologica-OFL.txt.
+Plugin Update Checker — MIT; see vendor/plugin-update-checker/license.txt.
+GRID-Arendal flower identity is supplied by GRID-Arendal; see the parent project BRANDING.md.
+ACF, Beaver Builder/Themer, WooCommerce and LearnPress are separately installed dependencies and are not bundled.
