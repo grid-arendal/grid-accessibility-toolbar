@@ -27,3 +27,5 @@ Reviewed 23 November 2026. This is a technical implementation record, not legal 
 ## GRID policy reference
 
 [GRID-Arendal disclaimer/privacy information](https://www.grida.no/about/disclaimer) was the organisation/context reference requested by the user. Its older continued-use cookie wording was not copied into the new notice: explicit opt-in and withdrawal are used instead. The generated draft is based on the actual configured services and must be completed/reviewed by the controller; this plugin does not silently publish or declare a policy approved. The pilot notice deliberately identifies pending site-owner review and keeps optional tracking disabled until that review is confirmed.
+
+Official integration guidance: https://sitekit.withgoogle.com/documentation/features/consent-mode/ and https://learn.microsoft.com/en-us/clarity/third-party-integrations/wordpress. Server reporting: https://docs.cpanel.net/cpanel/metrics/awstats/.

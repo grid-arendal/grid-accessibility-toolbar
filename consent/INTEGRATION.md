@@ -1,3 +1,11 @@
+## Google measurement modes
+
+New installations select advanced Consent Mode by default. After service IDs and setup review, Google receives cookieless measurements before a choice and after rejection. Analytics cookies require consent. Basic mode blocks Google until consent. Existing saved modes and legacy installations without a mode retain their prior basic behaviour. GPC blocks Google entirely in either mode. Clarity and custom analytics scripts remain opt-in.
+
+Advanced mode is a technical setting, not an exemption from Norwegian/EU rules. The controller must assess its lawful basis, transparency, necessity, vendor terms and international transfers. Publish the matching notice before enabling. Google’s measurement may include page/referrer/device details and expose IP addresses even without cookies. Remove personal data from page URLs and titles. Previously documented “zero external requests before consent” results apply to basic mode only.
+
+Setup checks the official Site Kit by Google and Microsoft Clarity plugins, with WordPress-native install/activate actions. Account connection remains with the site owner. Valid connected IDs are imported into empty GRID fields at first activation, or via the explicit import action. Existing IDs/settings in all plugins are preserved. The GRID blocker continues to suppress competing frontend snippets; the managed loaders control measurement. Do not enable unrelated Site Kit/Clarity marketing or server-side collection without a separate review.
+
 # GRID Cookie Consent: deployment and limits
 
 This is a separate WordPress plugin, independent of GRID Accessibility Widget and GRID Editorial Tools. All runtime code, styles and consent records are local to the site. There is no external CMP account, geolocation lookup, framework or UI font download. The source is GPL-2.0-or-later; the GRID flower is supplied by GRID-Arendal for its branding. CookieYes, CookieHub, Klaro and CookieConsent were used as product/architecture references; proprietary code was not reproduced.

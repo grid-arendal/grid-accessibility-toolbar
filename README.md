@@ -6,7 +6,7 @@ Three independently installed and updated products share this source repository:
 |---|---|---|---|
 | GRID Accessibility Widget | repository root | 3.0.1 | grid-accessibility-toolbar-3.0.1.zip |
 | GRID Editorial Tools | editorial/ | 1.0.1 | grid-editorial-tools-1.0.1.zip |
-| GRID Cookie Consent | consent/ | 1.0.2 | grid-cookie-consent-1.0.2.zip |
+| GRID Cookie Consent | consent/ | 1.0.3 | grid-cookie-consent-1.0.3.zip |
 
 The runtimes have no dependency on one another. Install any combination. Third-party WordPress dependencies remain separate.
 

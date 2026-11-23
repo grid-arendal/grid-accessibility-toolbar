@@ -12,7 +12,7 @@ The browser suite uses the production PHP blocker and locale definitions, produc
 
 ## Native access.grida.no pilot
 
-Pre-install network inspection found GA4, GTM, Clarity, GTranslate, Google Fonts and an advertising bootstrap. Managed IDs were taken from actual site output, not invented. Existing vendor plugins were not deactivated or edited. The consent blocker removes known competing snippets; the pilot remains unreviewed, so optional tracking stays off.
+Pre-install network inspection found GA4, GTM, Clarity, GTranslate, Google Fonts and an advertising bootstrap. Managed IDs were taken from actual site output, not invented. Existing vendor plugins were not deactivated or edited. The consent blocker removes known competing snippets; the initial pilot was unreviewed, so optional tracking stayed off during that initial test.
 
 The plugin generated an editable WordPress policy draft from the configured services. A site-specific testing notice was published at https://access.grida.no/cookies-and-privacy-choices/ and linked through the normal setup fields. It is explicitly pending site-owner review and does not copy the reference policy's old continued-use consent rule.
 
@@ -23,3 +23,7 @@ Public home, policy and shop checks at desktop/tablet/mobile sizes found zero ex
 ## Boundaries
 
 Unrecognised dynamic/server/proxy/header tracking and provider-domain/HttpOnly cookie removal are outside automatic guarantees. All pages, caches, optimisers, essential checkout/form integrations, vendor agreements, transfers, minors/sensitive-data restrictions and the final notice need controller review before enabling optional services or deploying to other websites. Browser automation and axe are not exhaustive accessibility or legal audits.
+
+## Advanced Consent Mode update
+
+64 PHP assertions on each of PHP 7.4 and 8.5 include new-install advanced defaults, preserved legacy basic mode and non-destructive connected-ID import. Separate advanced-mode browser scenarios check denied analytics/ad signals before choice and after rejection, no analytics cookies while denied, consent updates without duplicate tags, withdrawal back to cookieless measurement, GPC blocking, signed-in exclusion, unreviewed blocking and preview isolation. The existing zero-external-request tests apply to basic mode. Advanced mode deliberately sends Google requests and makes no zero-request or legal-compliance claim.

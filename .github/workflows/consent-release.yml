@@ -6,7 +6,7 @@ on:
       version:
         description: Stable consent version matching the PHP header
         required: true
-        default: '1.0.2'
+        default: '1.0.3'
 permissions:
   contents: write
 concurrency:

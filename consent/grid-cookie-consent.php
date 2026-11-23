@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: GRID Cookie Consent
- * Description: Local, configurable consent controls, strict opt-in Analytics/Clarity, consent receipts and editable cookie policies. Supports compliance; does not certify it.
- * Version: 1.0.2
+ * Description: Local, configurable consent controls, Google Consent Mode and opt-in Clarity, consent receipts and editable cookie policies. Supports compliance; does not certify it.
+ * Version: 1.0.3
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Requires at least: 6.4
@@ -12,7 +12,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 final class GRID_Cookie_Consent {
-    const VERSION = '1.0.2';
+    const VERSION = '1.0.3';
     const OPTION = 'grid_cookie_consent';
     const FILE = __FILE__;
     public static function boot() {
@@ -27,7 +27,7 @@ final class GRID_Cookie_Consent {
         add_shortcode( 'grid_cookie_policy', array( 'GRID_Cookie_Settings', 'policy' ) );
     }
     public static function activate() {
-        self::boot(); GRID_Cookie_Receipts::install();
+        self::boot(); GRID_Cookie_Settings::import_connected(); GRID_Cookie_Receipts::install();
         if ( ! wp_next_scheduled( 'grid_cookie_prune' ) ) wp_schedule_event( time()+3600, 'daily', 'grid_cookie_prune' );
     }
     public static function deactivate() { wp_clear_scheduled_hook( 'grid_cookie_prune' ); }
@@ -40,7 +40,7 @@ final class GRID_Cookie_Consent {
     }
     public static function config( $preview=false ) {
         $s=GRID_Cookie_Settings::get(); $home=home_url('/'); $path=wp_parse_url($home,PHP_URL_PATH)?:'/';
-        return array('version'=>self::VERSION,'revision'=>GRID_Cookie_Settings::revision(),'ready'=>$preview?true:(bool)$s['reviewed'],'preview'=>$preview,'days'=>$s['days'],'endpoint'=>rest_url('grid-cookie/v1/'),'cookie'=>GRID_Cookie_Settings::cookie_name(),'path'=>$path,'secure'=>is_ssl(),'position'=>$s['position'],'accent'=>$s['accent'],'background'=>$s['background'],'text'=>$s['text'],'radius'=>$s['radius'],'font'=>$s['font'],'language'=>$s['language'],'locales'=>GRID_Cookie_Settings::locales(),'privacy'=>$s['privacy'],'controller'=>$s['controller'],'ga'=>$s['ga'],'clarity'=>$s['clarity'],'services'=>$s['services'],'functional'=>(bool)$s['functional'],'trackingAllowed'=>!is_user_logged_in()||!empty($s['logged_in']),'mask'=>true);
+        return array('version'=>self::VERSION,'revision'=>GRID_Cookie_Settings::revision(),'ready'=>$preview?true:(bool)$s['reviewed'],'preview'=>$preview,'days'=>$s['days'],'endpoint'=>rest_url('grid-cookie/v1/'),'cookie'=>GRID_Cookie_Settings::cookie_name(),'path'=>$path,'secure'=>is_ssl(),'position'=>$s['position'],'accent'=>$s['accent'],'background'=>$s['background'],'text'=>$s['text'],'radius'=>$s['radius'],'font'=>$s['font'],'language'=>$s['language'],'locales'=>GRID_Cookie_Settings::locales(),'privacy'=>$s['privacy'],'controller'=>$s['controller'],'ga'=>$s['ga'],'gaMode'=>$s['ga_mode'],'clarity'=>$s['clarity'],'services'=>$s['services'],'functional'=>(bool)$s['functional'],'trackingAllowed'=>!is_user_logged_in()||!empty($s['logged_in']),'mask'=>true);
     }
     public static function head() {
         $config=self::config();$nonce=(string)apply_filters('grid_cookie_csp_nonce','');$n=$nonce?' nonce="'.esc_attr($nonce).'"':'';
@@ -49,7 +49,7 @@ final class GRID_Cookie_Consent {
         echo '<link rel="stylesheet" href="'.esc_url(plugins_url('assets/consent.css',self::FILE)).'?ver='.self::VERSION.'">';
         echo '<script id="grid-cookie-runtime" src="'.esc_url(plugins_url('assets/consent.js',self::FILE)).'?ver='.self::VERSION.'" defer'.$n.'></script>';
     }
-    public static function root() { echo '<div id="grid-cookie-consent" data-ga-a11y-ignore data-clarity-mask="true"></div><noscript><p>Optional services managed by GRID Cookie Consent stay blocked without JavaScript. This site uses a necessary cookie to remember choices.</p></noscript>'; }
+    public static function root() { echo '<div id="grid-cookie-consent" data-ga-a11y-ignore data-clarity-mask="true"></div><noscript><p>Consent-controlled services managed by GRID Cookie Consent stay blocked without JavaScript. This site uses a necessary cookie to remember choices.</p></noscript>'; }
     public static function settings_link() { return '<button type="button" class="grid-cookie-open">Cookie settings / informasjonskapsler</button>'; }
 }
 add_action( 'plugins_loaded', array( 'GRID_Cookie_Consent', 'boot' ) );
