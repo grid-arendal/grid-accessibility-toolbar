@@ -2,7 +2,7 @@
 Contributors: grid-arendal
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 
 Self-hosted, customisable cookie consent, separate Google Analytics/Clarity purposes and local receipts. Supports compliance; does not certify it.
