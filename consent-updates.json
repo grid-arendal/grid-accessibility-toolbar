@@ -1,10 +1,10 @@
 {
   "name": "GRID Cookie Consent",
   "slug": "grid-cookie-consent",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "requires": "6.4",
   "requires_php": "7.4",
-  "sha256": "54fd0b9ab1a0c6433930e86ba92320006810f45e31f9bfbf61a515f77f2e4688",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.1/grid-cookie-consent-1.0.1.zip",
-  "notes": "First independent consent release. Self-hosted configurable opt-in controls, separate GA4/Clarity choices, GPC, local receipts, policy drafts and reversible grouping of recognised GRID admin menus. Optional services fail closed until setup is reviewed. No universal legal compliance or automatic detection of every tracker is claimed. Site-specific audit, vendor/legal review and cache testing remain required.\n\nPilot feedback: full-width banner, immediate unsaved appearance preview and standard-size GRID flower branding.\n"
+  "sha256": "f115dc6e1245735dd52994f69bf3b9b76793f487aaf4bc4d6f5c91ea4fbfd3ff",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.2/grid-cookie-consent-1.0.2.zip",
+  "notes": "1.0.2: Explain functional cookies and external content on the first banner and in detailed preferences. State how declining can affect videos, maps, translation and fonts, and that this choice is separate from statistics/session recording. Clarify blocked external-content placeholders and generated policies. Consent remains optional and off by default. Instant banner-position preview is retained.\n"
 }
