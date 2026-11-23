@@ -1,10 +1,10 @@
 {
   "name": "GRID Cookie Consent",
   "slug": "grid-cookie-consent",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "requires": "6.4",
   "requires_php": "7.4",
-  "sha256": "f115dc6e1245735dd52994f69bf3b9b76793f487aaf4bc4d6f5c91ea4fbfd3ff",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.2/grid-cookie-consent-1.0.2.zip",
-  "notes": "1.0.2: Explain functional cookies and external content on the first banner and in detailed preferences. State how declining can affect videos, maps, translation and fonts, and that this choice is separate from statistics/session recording. Clarify blocked external-content placeholders and generated policies. Consent remains optional and off by default. Instant banner-position preview is retained.\n"
+  "sha256": "cf778789ec98567c69998f2f77d940596844ea524dba199230ccd6cc96249a4b",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.3/grid-cookie-consent-1.0.3.zip",
+  "notes": "1.0.3: Add an explicit administrator choice between basic and advanced (new-install default) Google Consent Mode. Advanced mode loads the managed Google tag with analytics/ad storage denied before consent and after rejection; analytics cookies require consent. Notices and generated policies explain the cookieless requests. GPC still blocks Google entirely, signed-in measurement respects its setting, and Clarity/custom analytics remain opt-in. Adds clearer bilingual functional-cookie and external-content explanations. Checks the official Site Kit by Google and Microsoft Clarity integrations with native install/activate actions, and imports connected IDs into empty fields. Existing saved/legacy modes remain unchanged. Instant appearance preview retained. Advanced mode is not automatic legal compliance.\n"
 }
