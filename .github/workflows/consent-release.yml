@@ -30,7 +30,7 @@ jobs:
           INPUT_VERSION: ${{ inputs.version }}
           RELEASE_REF: ${{ github.event.ref }}
         run: |
-          version="${INPUT_VERSION:-${RELEASE_REF#release/consent/}}"
+          version="${INPUT_VERSION:-${RELEASE_REF##*/}}"
           if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then exit 1; fi
           echo "CONSENT_VERSION=$version" >> "$GITHUB_ENV"
       - name: PHP/JavaScript policy and security tests

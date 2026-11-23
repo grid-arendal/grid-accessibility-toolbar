@@ -1,12 +1,14 @@
 {
   "dependencies": {
-    "@axe-core/playwright": "^4.14.0",
-    "@php-wasm/node": "^3.1.65",
-    "@php-wasm/universal": "^3.1.65",
-    "playwright": "^1.65.1"
+    "@axe-core/playwright": "4.14.0",
+    "@php-wasm/node": "3.1.65",
+    "@php-wasm/universal": "3.1.65",
+    "playwright": "1.65.1"
   },
   "private": true,
   "scripts": {
     "test:browser": "node tests/browser.cjs"
-  }
+  },
+  "name": "grid-cookie-consent-tests",
+  "version": "1.0.1"
 }
