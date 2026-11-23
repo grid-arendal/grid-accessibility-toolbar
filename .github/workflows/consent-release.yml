@@ -1,0 +1,53 @@
+name: Release GRID Cookie Consent
+on:
+  create:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Stable consent version matching the PHP header
+        required: true
+        default: '1.0.1'
+permissions:
+  contents: write
+concurrency:
+  group: grid-consent-release
+  cancel-in-progress: false
+jobs:
+  consent:
+    if: github.event_name == 'workflow_dispatch' || (github.event.ref_type == 'branch' && startsWith(github.event.ref, 'release/consent/'))
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: consent/package-lock.json
+      - name: Resolve stable version
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          RELEASE_REF: ${{ github.event.ref }}
+        run: |
+          version="${INPUT_VERSION:-${RELEASE_REF#release/consent/}}"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then exit 1; fi
+          echo "CONSENT_VERSION=$version" >> "$GITHUB_ENV"
+      - name: PHP/JavaScript policy and security tests
+        run: |
+          find consent -name '*.php' -print0 | xargs -0 -n1 php -l
+          php consent/tests/php.php
+          node --check consent/assets/consent.js
+      - name: Browser privacy, accessibility and preview tests
+        working-directory: consent
+        run: |
+          npm ci --ignore-scripts
+          npx playwright install --with-deps chromium
+          node tests/browser.cjs
+      - name: Build and verify installable ZIP
+        run: python3 consent/tools/build-release.py --source consent --output consent/dist --version "$CONSENT_VERSION"
+      - name: Publish consent release
+        run: |
+          gh release create "consent-v$CONSENT_VERSION" "consent/dist/grid-cookie-consent-$CONSENT_VERSION.zip" consent/dist/SHA256SUMS.txt \
+            --target "$GITHUB_SHA" --title "GRID Cookie Consent $CONSENT_VERSION" --notes-file consent/RELEASE-NOTES.md
+          python3 consent/tools/publish.py --metadata consent/dist/consent-updates.json

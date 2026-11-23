@@ -1,0 +1,5 @@
+GRID Cookie Consent runtime code is original GPL-2.0-or-later.
+No frontend framework, external CMP runtime, Google/Microsoft SDK, third-party font, CookieYes/CookieHub code or Klaro/CookieConsent runtime is bundled.
+The GRID flower SVG is supplied by GRID-Arendal for GRID-Arendal identity. Branding rights remain with their owner; a GPL software license does not transfer trademark rights.
+Google Analytics, Microsoft Clarity and other optional services are loaded from their providers only when configured, reviewed and permitted by the visitor. Their terms, processing arrangements, transfer safeguards and suitability are controller responsibilities.
+Test/development dependencies such as Playwright, axe-core and PHP-WASM are not shipped in the WordPress ZIP.
