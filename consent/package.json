@@ -10,5 +10,5 @@
     "test:browser": "node tests/browser.cjs"
   },
   "name": "grid-cookie-consent-tests",
-  "version": "1.0.1"
+  "version": "1.0.2"
 }

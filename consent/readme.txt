@@ -2,7 +2,7 @@
 Contributors: grid-arendal
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 
 Self-hosted, customisable strict opt-in consent, separate Google Analytics/Clarity purposes and local receipts. Supports compliance; does not certify it.
@@ -25,7 +25,7 @@ Use [grid_cookie_settings] for another preferences link; [grid_cookie_policy] fo
 One necessary choice cookie is written only after a decision. A cross-tab sync entry may be used after a choice. No IP, browser agent, account identity or browsing URL is written to local consent receipts. Server logs and other plugins are outside that receipt store. The controller manages retention (at least the choice lifetime, at most 365 days) and applicable rights requests. Receipt IDs are pseudonymous, not anonymous identity proof. Denials still work if receipt recording is temporarily unavailable; grants fail closed. At most 100,000 receipts are retained; older records are pruned by WP-Cron according to retention.
 
 == Changelog ==
-= 1.0.1 =
+= 1.0.2 =
 * Live appearance/position preview, true full-width layout and branded, reversible GRID menu grouping.
 
 = 1.0.0 =

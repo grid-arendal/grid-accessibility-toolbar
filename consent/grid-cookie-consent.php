@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Cookie Consent
  * Description: Local, configurable consent controls, strict opt-in Analytics/Clarity, consent receipts and editable cookie policies. Supports compliance; does not certify it.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Requires at least: 6.4
@@ -12,7 +12,7 @@
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 final class GRID_Cookie_Consent {
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
     const OPTION = 'grid_cookie_consent';
     const FILE = __FILE__;
     public static function boot() {

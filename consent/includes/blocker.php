@@ -38,7 +38,7 @@ final class GRID_Cookie_Blocker {
             if(!$s['functional']||!$src||!$host||strtolower($host)===strtolower($home))return$m[0];
             // srcdoc can contain arbitrary trackers; never auto-replay it.
             $open=self::remove_attr(self::remove_attr($open,'src'),'srcdoc');
-            return '<div class="grid-cookie-embed"><button type="button" class="grid-cookie-open">External content: open cookie settings</button>'.rtrim(substr($open,0,-1)).' src="about:blank" data-grid-cookie-frame="functional" data-grid-cookie-src="'.esc_attr($src).'" title="'.esc_attr($a['title']??'Optional external content').'">'.substr($m[0],$at+1).'</div>';
+            return '<div class="grid-cookie-embed"><button type="button" class="grid-cookie-open">Functional external content is off — open cookie settings to enable it</button>'.rtrim(substr($open,0,-1)).' src="about:blank" data-grid-cookie-frame="functional" data-grid-cookie-src="'.esc_attr($src).'" title="'.esc_attr($a['title']??'Optional external content').'">'.substr($m[0],$at+1).'</div>';
         },$html);
         $html=preg_replace_callback('~<link\b[^>]*>~i',function($m)use($s){$a=self::attrs($m[0]);$href=$a['href']??'';$rel=strtolower($a['rel']??'');$h=wp_parse_url($href,PHP_URL_HOST)?:'';
             $known=self::tracker($href)||preg_match('/(?:^|\.)(?:gtranslate\.net|fonts\.googleapis\.com|fonts\.gstatic\.com)$/i',$h);
