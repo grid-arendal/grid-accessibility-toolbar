@@ -1,10 +1,10 @@
 {
   "name": "GRID Cookie Consent",
   "slug": "grid-cookie-consent",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "requires": "6.4",
   "requires_php": "7.4",
-  "sha256": "95b895efe00121b604bfe32456e4834d06cfd68992711c2f425da03dcdf6fba8",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.4/grid-cookie-consent-1.0.4.zip",
-  "notes": "Remove the Consent records admin page and bulk JSON download. Local verification receipts continue to expire under the configured retention policy.\n"
+  "sha256": "38bf323f4b1e504b1ef79aa902a6bbd5213cd91f5fc824627307a66751e4f397",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/consent-v1.0.5/grid-cookie-consent-1.0.5.zip",
+  "notes": "Fix locally hosted GTranslate loaders starting before their consent-held settings. Gate the local loader and settings together so translation initialises after functional consent. Preserve denial, withdrawal, GPC, provider metadata and existing consent records. Adds PHP and browser regression coverage.\n"
 }
