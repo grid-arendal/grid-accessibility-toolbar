@@ -264,6 +264,7 @@
                     if (key === 'font' && state.font) state.dyslexia = false;
                 }
                 customProfile(); apply(); save(); status.textContent = labels.updated;
+                if (key === 'focus' && state.focus) el.focus({ preventScroll: true });
                 if (key === 'structure' && state.structure) outlineTitle.focus();
             });
             controls[key] = el; row.appendChild(el); grid.appendChild(row);
@@ -478,6 +479,7 @@
         var stopped = false;
         var frame = 0;
         function pageClasses(enabled) {
+            host.toggleAttribute('data-strong-focus', enabled && !!state.focus);
             ['spacing', 'font', 'dyslexia', 'links', 'motion', 'cursor', 'mask', 'guide', 'images', 'focus'].forEach(function (key) { body.classList.toggle('ga-a11y-' + key, enabled && !!state[key]); });
             ['dark', 'light'].forEach(function (mode) { body.classList.toggle('ga-a11y-' + mode, enabled && state.contrast === mode); });
             ['lineheight', 'align', 'saturation'].forEach(function (key) {

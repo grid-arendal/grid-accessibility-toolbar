@@ -1,1 +1,1 @@
-Removes the custom Plugin updates admin section. Published-release checks, update notifications and installation continue through the normal WordPress Plugins and Updates screens. No settings or content are changed.
+Strong focus now shows a yellow and black ring inside the toolbar and on focused page controls. Enabling the option immediately previews the ring on its button in Safari.

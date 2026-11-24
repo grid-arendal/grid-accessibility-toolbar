@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Accessibility Widget
  * Description: GRID-Arendal visitor accessibility preferences, profiles and optional GTranslate integration. Independent of GRID Editorial Tools.
- * Version: 3.0.1
+ * Version: 3.0.2
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '3.0.1';
+    const VERSION = '3.0.2';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {

@@ -106,3 +106,6 @@ header { padding: 14px 18px 18px; background: #fff; color: #470b56; border-top: 
 .header-copy h2 { font-size: 18px; }
 .brand-credit { margin: 4px 0 0; color: #672377; font-size: 12px; line-height: 1.5; }
 .brand-credit a { color: #672377; text-decoration: underline; text-underline-offset: 2px; }
+
+/* Keep the enhanced ring visible within the widget shadow root. */
+:host([data-strong-focus]) :focus { outline: 4px solid #111 !important; outline-offset: 2px !important; box-shadow: 0 0 0 8px #ffdf00, 0 0 0 10px #111 !important; }
