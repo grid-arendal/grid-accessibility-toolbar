@@ -1,16 +1,16 @@
 {
   "name": "vendor",
   "slug": "grid-accessibility-toolbar",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
   "author": "GRID-Arendal",
   "author_homepage": "https://www.grida.no/",
   "requires": "6.4",
   "requires_php": "7.4",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v3.0.1/grid-accessibility-toolbar-3.0.1.zip",
-  "sha256": "c056384e28c3bc237e7a528ee50d68e9ffa13821194e972d5c84e3204e25ca19",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v3.0.2/grid-accessibility-toolbar-3.0.2.zip",
+  "sha256": "dda94ed912848ded93a76b3a05120a3335537b5b6521a1131531829bc660b1f0",
   "sections": {
     "description": "<p>Independent GRID-Arendal widget plugin. Configure and update this product separately.</p>",
-    "changelog": "<p>Removes the custom Plugin updates admin section. Published-release checks, update notifications and installation continue through the normal WordPress Plugins and Updates screens. No settings or content are changed.<br></p>"
+    "changelog": "<p>Strong focus now shows a yellow and black ring inside the toolbar and on focused page controls. Enabling the option immediately previews the ring on its button in Safari.<br></p>"
   }
 }
