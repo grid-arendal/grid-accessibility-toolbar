@@ -2,13 +2,13 @@
 Contributors: grid-arendal
 Requires at least: 6.4
 Requires PHP: 7.4
-Stable tag: 3.0.2
+Stable tag: 3.1.1
 License: GPLv2 or later
 
 GRID-Arendal visitor reading preferences and optional GTranslate integration.
 
 == Description ==
-Accessible, keyboard-operable preference panel with text sizing, spacing, readable/OpenDyslexic fonts, contrast, highlighted links, reduced motion, reading aids, image hiding, page structure and transparent preference profiles. Stores optional visitor preferences locally; includes GRID-Arendal flower branding and an optional embedded GTranslate language selector. Core controls work without third-party services.
+Accessible, keyboard-operable preference panel with text sizing, spacing, readable/OpenDyslexic fonts, contrast, highlighted links, reduced motion, reading aids, image hiding, page structure and transparent preference profiles. Stores optional visitor preferences locally; includes configurable organisation name, credit, logo, colours and panel font and an optional embedded GTranslate language selector. Core controls work without third-party services.
 
 This plugin is independent of GRID Editorial Tools. It does not create ACF groups, editors, login icons, review queues, imports, maps or LMS connections. Install Editorial Tools separately for those features. GTranslate is separately installed for translation; it is not bundled.
 

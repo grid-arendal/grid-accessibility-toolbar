@@ -2,7 +2,7 @@
 /**
  * Plugin Name: GRID Accessibility Widget
  * Description: GRID-Arendal visitor accessibility preferences, profiles and optional GTranslate integration. Independent of GRID Editorial Tools.
- * Version: 3.0.2
+ * Version: 3.1.1
  * Author: GRID-Arendal
  * License: GPL-2.0-or-later
  * Text Domain: grid-accessibility-toolbar
@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 final class GRID_Accessibility_Toolbar {
-    const VERSION = '3.0.2';
+    const VERSION = '3.1.1';
     const OPTION = 'grid_a11y_settings';
 
     public static function tools() {
@@ -60,6 +60,7 @@ final class GRID_Accessibility_Toolbar {
             'enabled' => 1, 'remember' => 1, 'profiles_enabled' => 1, 'translation_enabled' => 1, 'side' => 'right', 'bottom' => 24,
             'color' => '#823b93', 'title' => __( 'Accessibility Widget', 'grid-accessibility-toolbar' ),
             'label' => __( 'Accessibility', 'grid-accessibility-toolbar' ),
+            'brand_name' => 'GRID-Arendal', 'brand_url' => 'https://www.grida.no/', 'brand_logo' => '', 'brand_logo_layout' => 'square', 'brand_logo_background' => 'none', 'brand_credit' => 1, 'surface_color' => '#ffffff', 'panel_font' => 'geologica',
             'statement' => '', 'exclude' => '', 'tools' => array_keys( self::tools() ), 'tools_version' => 4, 'brand_version' => 2,
         );
     }
@@ -96,17 +97,25 @@ final class GRID_Accessibility_Toolbar {
         $input = is_array( $input ) ? $input : array();
         $defaults = self::defaults();
         $out = $defaults;
-        foreach ( array( 'enabled', 'remember', 'profiles_enabled', 'translation_enabled' ) as $key ) {
+        foreach ( array( 'enabled', 'remember', 'profiles_enabled', 'translation_enabled', 'brand_credit' ) as $key ) {
             $out[ $key ] = empty( $input[ $key ] ) ? 0 : 1;
         }
         $out['side'] = isset( $input['side'] ) && 'left' === $input['side'] ? 'left' : 'right';
         $out['bottom'] = max( 16, min( 200, isset( $input['bottom'] ) ? absint( $input['bottom'] ) : 24 ) );
         $out['color'] = isset( $input['color'] ) && is_string( $input['color'] ) ? sanitize_hex_color( $input['color'] ) : '';
         $out['color'] = $out['color'] ? $out['color'] : $defaults['color'];
-        foreach ( array( 'title', 'label' ) as $key ) {
+        foreach ( array( 'title', 'label', 'brand_name' ) as $key ) {
             $value = isset( $input[ $key ] ) && is_string( $input[ $key ] ) ? sanitize_text_field( $input[ $key ] ) : '';
             $out[ $key ] = '' !== $value ? wp_html_excerpt( $value, 80, '' ) : $defaults[ $key ];
         }
+        foreach ( array( 'brand_url', 'brand_logo' ) as $key ) {
+            $out[ $key ] = isset( $input[ $key ] ) && is_string( $input[ $key ] ) ? esc_url_raw( $input[ $key ], array( 'https', 'http' ) ) : '';
+        }
+        $surface = isset( $input['surface_color'] ) && is_string( $input['surface_color'] ) ? sanitize_hex_color( $input['surface_color'] ) : '';
+        $out['surface_color'] = $surface ? $surface : $defaults['surface_color'];
+        $out['brand_logo_layout'] = isset( $input['brand_logo_layout'] ) && 'wide' === $input['brand_logo_layout'] ? 'wide' : 'square';
+        $out['brand_logo_background'] = isset( $input['brand_logo_background'] ) && 'accent' === $input['brand_logo_background'] ? 'accent' : 'none';
+        $out['panel_font'] = isset( $input['panel_font'] ) && 'site' === $input['panel_font'] ? 'site' : 'geologica';
         $out['statement'] = isset( $input['statement'] ) && is_string( $input['statement'] ) ? esc_url_raw( $input['statement'], array( 'https', 'http' ) ) : '';
         $selected_tools = isset( $input['tools'] ) && is_array( $input['tools'] ) ? array_filter( $input['tools'], 'is_string' ) : array();
         $out['tools'] = array_values( array_intersect( array_keys( self::tools() ), $selected_tools ) );
@@ -192,6 +201,14 @@ final class GRID_Accessibility_Toolbar {
         return 'no';
     }
 
+    public static function branding( $settings ) {
+        return array(
+            'name' => $settings['brand_name'], 'url' => $settings['brand_url'],
+            'logo' => $settings['brand_logo'] ? $settings['brand_logo'] : ( 'GRID-Arendal' === $settings['brand_name'] ? plugins_url( 'assets/branding/grid-flower.svg', __FILE__ ) : '' ),
+            'layout' => $settings['brand_logo_layout'], 'credit' => ! empty( $settings['brand_credit'] ),
+        );
+    }
+
     public static function render() {
         if ( ! self::should_display() ) {
             return;
@@ -200,7 +217,7 @@ final class GRID_Accessibility_Toolbar {
         $translation = ! empty( $settings['translation_enabled'] ) && shortcode_exists( 'gtranslate' );
         $config = array(
             'settings' => $settings,
-            'brand' => array( 'logo' => plugins_url( 'assets/branding/grid-flower.svg', __FILE__ ), 'url' => 'https://www.grida.no/' ),
+            'brand' => self::branding( $settings ),
             'translation' => $translation,
             'profiles' => $settings['profiles_enabled'] ? self::profiles() : array(),
             'css' => plugins_url( 'assets/toolbar.css', __FILE__ ) . '?ver=' . self::VERSION,
@@ -328,6 +345,10 @@ final class GRID_Accessibility_Toolbar {
     }
 
     public static function admin_assets() {
+        if ( isset( $_GET['page'] ) && 'grid-a11y' === $_GET['page'] && current_user_can( 'manage_options' ) ) {
+            wp_enqueue_media();
+            wp_enqueue_script( 'grid-a11y-brand-admin', plugins_url( 'assets/admin-branding.js', __FILE__ ), array( 'media-editor' ), self::VERSION, true );
+        }
         wp_enqueue_style( 'grid-a11y-admin', plugins_url( 'assets/admin.css', __FILE__ ), array(), self::VERSION );
     }
 
@@ -369,7 +390,17 @@ final class GRID_Accessibility_Toolbar {
                     <?php endforeach; ?>
                     <tr><th scope="row"><label for="ga-side"><?php esc_html_e( 'Launcher side', 'grid-accessibility-toolbar' ); ?></label></th><td><select id="ga-side" name="grid_a11y_settings[side]"><option value="right" <?php selected( $s['side'], 'right' ); ?>><?php esc_html_e( 'Right', 'grid-accessibility-toolbar' ); ?></option><option value="left" <?php selected( $s['side'], 'left' ); ?>><?php esc_html_e( 'Left', 'grid-accessibility-toolbar' ); ?></option></select></td></tr>
                     <tr><th scope="row"><label for="ga-bottom"><?php esc_html_e( 'Distance from bottom (pixels)', 'grid-accessibility-toolbar' ); ?></label></th><td><input type="number" id="ga-bottom" name="grid_a11y_settings[bottom]" min="16" max="200" value="<?php echo esc_attr( $s['bottom'] ); ?>"><p class="description"><?php esc_html_e( '16–200. Adjust to avoid cookie banners and other floating controls.', 'grid-accessibility-toolbar' ); ?></p></td></tr>
-                    <tr><th scope="row"><label for="ga-color"><?php esc_html_e( 'Brand color', 'grid-accessibility-toolbar' ); ?></label></th><td><input type="color" id="ga-color" name="grid_a11y_settings[color]" value="<?php echo esc_attr( $s['color'] ); ?>"><p class="description"><?php esc_html_e( 'The launcher text color is chosen automatically for contrast.', 'grid-accessibility-toolbar' ); ?></p></td></tr>
+                    <tr><th scope="row"><label for="ga-color"><?php esc_html_e( 'Brand color', 'grid-accessibility-toolbar' ); ?></label></th><td><input type="color" id="ga-color" name="grid_a11y_settings[color]" value="<?php echo esc_attr( $s['color'] ); ?>"><p class="description"><?php esc_html_e( 'Used across the launcher and panel. Text and control colours are adjusted automatically for contrast.', 'grid-accessibility-toolbar' ); ?></p></td></tr>
+                    <tr><th colspan="2"><h2><?php esc_html_e( 'Branding', 'grid-accessibility-toolbar' ); ?></h2></th></tr>
+                    <?php foreach ( array( 'brand_name' => __( 'Organisation or website name', 'grid-accessibility-toolbar' ), 'brand_url' => __( 'Brand website URL', 'grid-accessibility-toolbar' ), 'brand_logo' => __( 'Logo URL', 'grid-accessibility-toolbar' ) ) as $key => $label ) : ?>
+                    <tr><th scope="row"><label for="ga-<?php echo esc_attr( $key ); ?>"><?php echo esc_html( $label ); ?></label></th><td><input type="<?php echo 'brand_name' === $key ? 'text' : 'url'; ?>" class="regular-text" id="ga-<?php echo esc_attr( $key ); ?>" name="grid_a11y_settings[<?php echo esc_attr( $key ); ?>]" value="<?php echo esc_attr( $s[ $key ] ); ?>" <?php echo 'brand_name' === $key ? 'maxlength="80"' : ''; ?>>
+                    <?php if ( 'brand_logo' === $key ) : ?><button type="button" class="button" id="ga-logo-select"><?php esc_html_e( 'Choose logo', 'grid-accessibility-toolbar' ); ?></button> <button type="button" class="button" id="ga-logo-clear"><?php esc_html_e( 'Clear logo', 'grid-accessibility-toolbar' ); ?></button><p class="description"><?php esc_html_e( 'Choose an image from the Media Library or enter an image URL. A custom brand without a logo uses the accessibility symbol.', 'grid-accessibility-toolbar' ); ?></p><?php endif; ?></td></tr>
+                    <?php endforeach; ?>
+                    <tr><th scope="row"><label for="ga-logo-layout"><?php esc_html_e( 'Logo shape', 'grid-accessibility-toolbar' ); ?></label></th><td><select id="ga-logo-layout" name="grid_a11y_settings[brand_logo_layout]"><option value="square" <?php selected( $s['brand_logo_layout'], 'square' ); ?>><?php esc_html_e( 'Square symbol', 'grid-accessibility-toolbar' ); ?></option><option value="wide" <?php selected( $s['brand_logo_layout'], 'wide' ); ?>><?php esc_html_e( 'Wide wordmark', 'grid-accessibility-toolbar' ); ?></option></select></td></tr>
+                    <tr><th scope="row"><label for="ga-logo-background"><?php esc_html_e( 'Logo background', 'grid-accessibility-toolbar' ); ?></label></th><td><select id="ga-logo-background" name="grid_a11y_settings[brand_logo_background]"><option value="none" <?php selected( $s['brand_logo_background'], 'none' ); ?>><?php esc_html_e( 'Panel background', 'grid-accessibility-toolbar' ); ?></option><option value="accent" <?php selected( $s['brand_logo_background'], 'accent' ); ?>><?php esc_html_e( 'Accent colour (for light wordmarks)', 'grid-accessibility-toolbar' ); ?></option></select></td></tr>
+                    <tr><th scope="row"><label for="ga-surface-color"><?php esc_html_e( 'Panel background', 'grid-accessibility-toolbar' ); ?></label></th><td><input type="color" id="ga-surface-color" name="grid_a11y_settings[surface_color]" value="<?php echo esc_attr( $s['surface_color'] ); ?>"></td></tr>
+                    <tr><th scope="row"><label for="ga-panel-font"><?php esc_html_e( 'Panel font', 'grid-accessibility-toolbar' ); ?></label></th><td><select id="ga-panel-font" name="grid_a11y_settings[panel_font]"><option value="geologica" <?php selected( $s['panel_font'], 'geologica' ); ?>>Geologica</option><option value="site" <?php selected( $s['panel_font'], 'site' ); ?>><?php esc_html_e( 'Match website font', 'grid-accessibility-toolbar' ); ?></option></select></td></tr>
+                    <tr><th scope="row"><?php esc_html_e( 'Brand credit', 'grid-accessibility-toolbar' ); ?></th><td><label><input type="checkbox" name="grid_a11y_settings[brand_credit]" value="1" <?php checked( $s['brand_credit'], 1 ); ?>> <?php esc_html_e( 'Show “Brought to you by” with the brand name', 'grid-accessibility-toolbar' ); ?></label><p class="description"><?php esc_html_e( 'The website URL is optional. Leave it blank for an unlinked credit.', 'grid-accessibility-toolbar' ); ?></p></td></tr>
                     <tr><th scope="row"><?php esc_html_e( 'Available controls', 'grid-accessibility-toolbar' ); ?></th><td><fieldset><legend class="screen-reader-text"><?php esc_html_e( 'Available controls', 'grid-accessibility-toolbar' ); ?></legend><?php foreach ( self::tools() as $key => $label ) : ?><label><input type="checkbox" name="grid_a11y_settings[tools][]" value="<?php echo esc_attr( $key ); ?>" <?php checked( in_array( $key, $s['tools'], true ) ); ?>> <?php echo esc_html( $label ); ?></label><br><?php endforeach; ?></fieldset></td></tr>
                     <tr><th scope="row"><label for="ga-statement"><?php esc_html_e( 'Accessibility statement URL', 'grid-accessibility-toolbar' ); ?></label></th><td><input type="url" class="regular-text" id="ga-statement" name="grid_a11y_settings[statement]" value="<?php echo esc_attr( $s['statement'] ); ?>"><p class="description"><?php esc_html_e( 'Optional. Use a full https:// URL to your statement or accessibility contact page.', 'grid-accessibility-toolbar' ); ?></p></td></tr>
                     <tr><th scope="row"><label for="ga-exclude"><?php esc_html_e( 'Excluded paths', 'grid-accessibility-toolbar' ); ?></label></th><td><textarea id="ga-exclude" name="grid_a11y_settings[exclude]" rows="5" class="large-text code" aria-describedby="ga-exclude-help"><?php echo esc_textarea( $s['exclude'] ); ?></textarea><p id="ga-exclude-help" class="description"><?php esc_html_e( 'One path per line, for example /checkout. Includes subpages. Use the full site path on subdirectory sites. No wildcards, query strings or full URLs. / excludes everything.', 'grid-accessibility-toolbar' ); ?></p></td></tr>

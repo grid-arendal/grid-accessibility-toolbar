@@ -49,7 +49,7 @@ jobs:
       - name: Validate isolation, migration and syntax
         run: |
           find . -name '*.php' -not -path './.git/*' -print0 | xargs -0 -n1 php -l
-          php tests/php-unit.php
+          php tests/branding.php
           php tests/modules.php
           php tests/split.php
           php tests/legacy-split.php

@@ -52,16 +52,32 @@
         var shadow = host.attachShadow({ mode: 'open' });
         host.hidden = true;
         host.dataset.side = settings.side;
+        host.dataset.logoBackground = settings.brand_logo_background || 'none';
         host.style.setProperty('--ga-bottom', settings.bottom + 'px');
         host.style.setProperty('--ga-brand', settings.color);
-        var hex = settings.color.slice(1);
-        if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
-        var channels = [0, 2, 4].map(function (i) {
-            var c = parseInt(hex.slice(i, i + 2), 16) / 255;
-            return c <= 0.04045 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-        });
-        var luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
-        host.style.setProperty('--ga-on-brand', luminance > 0.179 ? '#000000' : '#ffffff');
+        // Derive a complete palette, including readable text/control tones for light or dark brands.
+        function rgb(hex) {
+            hex = /^#(?:[a-f0-9]{3}|[a-f0-9]{6})$/i.test(hex || '') ? hex.slice(1) : 'ffffff';
+            if (hex.length === 3) hex = hex.split('').map(function (c) { return c + c; }).join('');
+            return [0, 2, 4].map(function (i) { return parseInt(hex.slice(i, i + 2), 16); });
+        }
+        function lum(c) { var v = c.map(function (n) { n /= 255; return n <= .04045 ? n / 12.92 : Math.pow((n + .055) / 1.055, 2.4); }); return .2126 * v[0] + .7152 * v[1] + .0722 * v[2]; }
+        function ratio(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + .05) / (Math.min(x, y) + .05); }
+        function mix(a, b, n) { return a.map(function (v, i) { return Math.round(v * (1 - n) + b[i] * n); }); }
+        function css(c) { return 'rgb(' + c.join(',') + ')'; }
+        var accent = rgb(settings.color), surface = rgb(settings.surface_color || '#ffffff');
+        var ink = ratio([0, 0, 0], surface) > ratio([255, 255, 255], surface) ? [0, 0, 0] : [255, 255, 255];
+        var soft = mix(surface, accent, .08), tone = accent.slice();
+        if (ratio(ink, soft) < 4.5) soft = surface.slice();
+        for (var step = 0; step <= 100; step++) {
+            tone = mix(accent, ink, step / 100);
+            if (ratio(tone, surface) >= 4.5 && ratio(tone, soft) >= 4.5) break;
+        }
+        var onAccent = ratio([0, 0, 0], accent) > ratio([255, 255, 255], accent) ? '#000000' : '#ffffff';
+        var palette = { '--ga-on-brand': onAccent, '--ga-surface': css(surface), '--ga-soft': css(soft), '--ga-ink': css(tone), '--ga-accent-text': css(tone), '--ga-border': css(tone), '--ga-focus': css(ink), '--ga-on-tone': ratio([0, 0, 0], tone) > ratio([255, 255, 255], tone) ? '#000000' : '#ffffff' };
+        Object.keys(palette).forEach(function (key) { host.style.setProperty(key, palette[key]); });
+        // Read the original website font before any saved visitor font preference is applied.
+        if (settings.panel_font === 'site') host.style.setProperty('--ga-panel-font', getComputedStyle(body).fontFamily);
         var sheet = document.createElement('link');
         sheet.rel = 'stylesheet'; sheet.href = config.css;
         sheet.onload = function () { if (!stopped) host.hidden = false; };
@@ -112,18 +128,22 @@
         launcher.appendChild(node('span', settings.label, { class: 'launcher-label', 'aria-hidden': 'true' }));
         var panel = node('section', '', { id: 'panel', role: 'dialog', 'aria-labelledby': 'ga-title', hidden: '' });
         var header = node('header');
-        var identity = node('div', '', { class: 'identity' });
+        var identity = node('div', '', { class: 'identity' + (config.brand && config.brand.layout === 'wide' ? ' has-wide-logo' : '') });
         if (config.brand && config.brand.logo) {
-            identity.appendChild(node('img', '', { class: 'grid-brand-logo', src: config.brand.logo, alt: '', width: '40', height: '40' }));
+            var logo = node('img', '', { class: 'grid-brand-logo', src: config.brand.logo, alt: '', width: '40', height: '40' });
+            logo.addEventListener('error', function () { var fallback = node('span', '', { class: 'brand-icon' }); fallback.appendChild(icon('accessibility')); logo.replaceWith(fallback); identity.classList.remove('has-wide-logo'); });
+            identity.appendChild(logo);
         } else {
             var brandIcon = node('span', '', { class: 'brand-icon' });
             brandIcon.appendChild(icon('accessibility')); identity.appendChild(brandIcon);
         }
         var heading = node('div', '', { class: 'header-copy' });
         heading.appendChild(node('h2', settings.title, { id: 'ga-title' }));
-        var credit = node('p', labels.credit + ' ', { class: 'brand-credit' });
-        credit.appendChild(node('a', 'GRID-Arendal', { href: config.brand.url }));
-        heading.appendChild(credit);
+        if (config.brand && config.brand.credit !== false && config.brand.name) {
+            var credit = node('p', labels.credit + ' ', { class: 'brand-credit' });
+            credit.appendChild(config.brand.url ? node('a', config.brand.name, { href: config.brand.url }) : node('span', config.brand.name));
+            heading.appendChild(credit);
+        }
         identity.appendChild(heading); header.appendChild(identity);
         var close = node('button', '', { type: 'button', class: 'close', 'aria-label': labels.close });
         close.appendChild(icon('close'));

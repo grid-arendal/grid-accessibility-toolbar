@@ -1,1 +1,1 @@
-Strong focus now shows a yellow and black ring inside the toolbar and on focused page controls. Enabling the option immediately previews the ring on its button in Safari.
+3.1.1 combines the organisation branding controls from 3.1.0 with the Strong focus fix from 3.0.2. Updates retain each site’s saved branding and visitor preferences.
