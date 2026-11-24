@@ -1,16 +1,16 @@
 {
   "name": "vendor",
   "slug": "grid-accessibility-toolbar",
-  "version": "3.0.2",
+  "version": "3.1.1",
   "homepage": "https://github.com/grid-arendal/grid-accessibility-toolbar",
   "author": "GRID-Arendal",
   "author_homepage": "https://www.grida.no/",
   "requires": "6.4",
   "requires_php": "7.4",
-  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v3.0.2/grid-accessibility-toolbar-3.0.2.zip",
-  "sha256": "dda94ed912848ded93a76b3a05120a3335537b5b6521a1131531829bc660b1f0",
+  "download_url": "https://github.com/grid-arendal/grid-accessibility-toolbar/releases/download/v3.1.1/grid-accessibility-toolbar-3.1.1.zip",
+  "sha256": "085d4525d81122deb517a5a394859fb165622af05121815cd88b823ff0c732f1",
   "sections": {
     "description": "<p>Independent GRID-Arendal widget plugin. Configure and update this product separately.</p>",
-    "changelog": "<p>Strong focus now shows a yellow and black ring inside the toolbar and on focused page controls. Enabling the option immediately previews the ring on its button in Safari.<br></p>"
+    "changelog": "<p>3.1.1 combines the organisation branding controls from 3.1.0 with the Strong focus fix from 3.0.2. Updates retain each site\u2019s saved branding and visitor preferences.<br></p>"
   }
 }
