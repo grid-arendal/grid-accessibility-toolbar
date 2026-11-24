@@ -27,3 +27,7 @@ Unrecognised dynamic/server/proxy/header tracking and provider-domain/HttpOnly c
 ## Advanced Consent Mode update
 
 64 PHP assertions on each of PHP 7.4 and 8.5 include new-install advanced defaults, preserved legacy basic mode and non-destructive connected-ID import. Separate advanced-mode browser scenarios check denied analytics/ad signals before choice and after rejection, no analytics cookies while denied, consent updates without duplicate tags, withdrawal back to cookieless measurement, GPC blocking, signed-in exclusion, unreviewed blocking and preview isolation. The existing zero-external-request tests apply to basic mode. Advanced mode deliberately sends Google requests and makes no zero-request or legal-compliance claim.
+
+## 1.0.5 local GTranslate regression
+
+PHP 7.4 and 8.5: 66 assertions pass, including recognition of local loader paths and data-gt-widget-id while preserving loader metadata. Complete browser suite passes, including local loader not running before functional consent, settings available when it runs, returning consent after reload and loader stopped on withdrawal. Existing GA/Clarity isolation, GPC, failure, accessibility and 320/390/820/1280px checks remain passing.

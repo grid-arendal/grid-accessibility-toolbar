@@ -28,7 +28,10 @@ final class GRID_Cookie_Blocker {
             $text=($a['src']??'').' '.$m[2];
             foreach($s['services']as$v)if(isset($a['src'])&&$a['src']===$v['src'])return'<!-- GRID consent: custom service is managed by the consent registry -->';
             if($kind=self::tracker($text))return'<!-- GRID consent blocked competing '.$kind.' snippet -->';
-            if($s['functional']&&preg_match('~gtranslateSettings|cdn\.gtranslate\.net|translate\.google\.(?:com|[a-z.]+)/translate_a~i',$text))return self::inert_script($m[1],$m[2],'functional');
+            // Local GTranslate loaders also need consent gating. Otherwise they run
+            // before their held settings, initialise nothing, and never retry on consent.
+            $gt_loader=isset($a['data-gt-widget-id'])||strpos($id,'gt_widget_script_')===0||preg_match('~(?:^|/)gtranslate/js/[^/?#]+\.js(?:[?#]|$)~i',$a['src']??'');
+            if($s['functional']&&($gt_loader||preg_match('~gtranslateSettings|cdn\.gtranslate\.net|translate\.google\.(?:com|[a-z.]+)/translate_a~i',$text)))return self::inert_script($m[1],$m[2],'functional');
             return$m[0];
         },$html);
         $html=preg_replace_callback('~<iframe\b[^>]*>[\s\S]*?</iframe\s*>~i',function($m)use($s){$at=strpos($m[0],'>');$open=substr($m[0],0,$at+1);$a=self::attrs($open);$src=$a['src']??'';

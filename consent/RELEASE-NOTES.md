@@ -1,1 +1,1 @@
-Remove the Consent records admin page and bulk JSON download. Local verification receipts continue to expire under the configured retention policy.
+Fix locally hosted GTranslate loaders starting before their consent-held settings. Gate the local loader and settings together so translation initialises after functional consent. Preserve denial, withdrawal, GPC, provider metadata and existing consent records. Adds PHP and browser regression coverage.

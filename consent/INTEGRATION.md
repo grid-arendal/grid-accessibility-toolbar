@@ -53,3 +53,7 @@ The compatibility blocker buffers public HTML and rewrites known snippets before
 ## Updates and rollout
 
 Independent source: `consent/` in the GRID public repository. Releases use `consent-vX.Y.Z`, their own ZIP and `consent-updates.json`. The native WordPress Plugins/Updates screens receive updates; there is no separate update settings page and no per-site credential. Package URLs are restricted to the exact product release; the downloader verifies SHA-256 before installation. Stage each site's update, test integrations, then roll out. No other websites are modified by the access.grida.no pilot.
+
+## GTranslate loader ordering (1.0.5)
+
+GTranslate settings and loaders are consent-gated together, including locally hosted scripts and native data-gt-widget-id metadata. This prevents a local loader from running before its held settings and failing to initialise the selector after consent. Original URL/domain/widget attributes are retained for the official loader. Rejection, withdrawal and GPC keep the loader off. No GTranslate vendor files need modification.
